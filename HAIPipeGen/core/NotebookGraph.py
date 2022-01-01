@@ -1,7 +1,7 @@
 
 import ast
 import astunparse
-from HAIPipeGen.read_ipynb import ipynb2py
+from HAIPipeGen.core.read_ipynb import ipynb2py
 import matplotlib.pyplot as plt
 from graphviz import Digraph
 import os
@@ -1216,16 +1216,16 @@ def save_graph(filepath):
         #print('error')
         return
     graph.build_graph()
-    graph.layout(directory="HAIPipeGen/new_data/prenotebook_figs/")
+    graph.layout(directory="HAIPipeGen/tmpdata/prenotebook_figs/")
     graph.delete_nodes()
     graph.update_edges()
     graph.get_white_edge_line()
-    graph.layout(directory="HAIPipeGen/new_data/prenotebook_resfigs/", all_nodes=False)
+    graph.layout(directory="HAIPipeGen/tmpdata/prenotebook_resfigs/", all_nodes=False)
     # #print(filename)
     filename = filepath.split('/')[-1]
     filename = filename.split(".")[0]
     try:
-        with open('HAIPipeGen/new_data/prenotebook_graph/'+filename+".pkl", 'wb') as f:
+        with open('HAIPipeGen/tmpdata/prenotebook_graph/'+filename+".pkl", 'wb') as f:
             pickle.dump(graph, f)
     except:
         pass
@@ -1268,10 +1268,10 @@ def count_edge(is_dataset):
             json.dump(all_split_point_edge_dict, f)
 # def count_dataset_edge():
 def batch_build_graph():
-    root_path = 'HAIPipeGen/new_data/prenotebook_code/'
+    root_path = 'HAIPipeGen/tmpdata/prenotebook_code/'
     filenames = os.listdir(root_path)
     # #print(len(filenames))
-    # root_path = 'HAIPipeGen/new_data/prenotebook_graph/'
+    # root_path = 'HAIPipeGen/tmpdata/prenotebook_graph/'
     # filenames = os.listdir(root_path)
     # #print(len(filenames))
     highlighted_num = 0
@@ -1295,7 +1295,7 @@ def batch_build_graph():
         file_path = root_path + file_name
         filename = file_path.split('/')[-1]
         filename = filename.split(".")[0]
-        # if os.path.exists('HAIPipeGen/new_data/prenotebook_graph/'+filename+".pkl"):
+        # if os.path.exists('HAIPipeGen/tmpdata/prenotebook_graph/'+filename+".pkl"):
             # continue
         # #print('\033[1;32;43mbuliding ' + file_name+" ........"+ '\033[0m')
         highlighted = save_graph(file_path)
@@ -1307,10 +1307,10 @@ def batch_build_graph():
     # #print(all_)
     # with open("highlight_list.json", 'w') as f:
         # json.dump(is_highlight_list, f)
-def build_one_graph(notebook_id):
-    if not os.path.exists('HAIPipeGen/new_data/prenotebook_graph'):
-        os.mkdir('HAIPipeGen/new_data/prenotebook_graph')
-    root_path = 'HAIPipeGen/new_data/prenotebook_code/'
+def profile_hipipe(notebook_id):
+    if not os.path.exists('HAIPipeGen/tmpdata/prenotebook_graph'):
+        os.mkdir('HAIPipeGen/tmpdata/prenotebook_graph')
+    root_path = 'HAIPipeGen/tmpdata/prenotebook_code/'
     file_path = root_path + notebook_id + '.py'
     highlighted = save_graph(file_path)
 if __name__ == "__main__":

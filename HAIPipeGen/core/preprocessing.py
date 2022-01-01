@@ -1,5 +1,5 @@
 import os
-from HAIPipeGen.read_ipynb import ipynb2py
+from HAIPipeGen.core.read_ipynb import ipynb2py
 import ast
 import astunparse
 import numpy as np
@@ -10,8 +10,8 @@ import random
 import time
 from func_timeout import func_set_timeout
 import func_timeout
-from HAIPipeGen.remove_model import remove_model
-from HAIPipeGen.remove_model import remove_model_2
+from HAIPipeGen.core.remove_model import remove_model
+from HAIPipeGen.core.remove_model import remove_model_2
 import gc
 import shutil
 if os.path.exists('runed.npy'):
@@ -59,7 +59,7 @@ def exchange_code(code):
         code = code.replace('.fit_sample(', '.fit_resample(')
     if 'from keras.utils import plot_model' in code:
         code = code.replace('from keras.utils import plot_model', "from keras.utils.vis_utils import plot_model")
-    # if not os.path.exists('HAIPipeGen/new_data/runned_notebook/'+ str(self.notebook_id) + '.py'):
+    # if not os.path.exists('HAIPipeGen/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py'):
     if 'from keras.utils import to_categorical' in code:
         # code = code.replace('from keras.utils import to_categorical\n', 'from keras import utils as np_utils\nnp_utils.to_categorical()\n')
         code = code.replace('from keras.utils import to_categorical', 'from sklearn.model_selection import train_test_split')
@@ -328,7 +328,7 @@ class Preprocessing:
         if '.ipynb' in filepath:
             # output_path = filepath.replace(".ipynb",'.py')
             # #print(output_path)
-            # output_path = output_path.replace("../data/notebook/",'HAIPipeGen/new_data/pycode/')
+            # output_path = output_path.replace("../data/notebook/",'HAIPipeGen/tmpdata/pycode/')
             # #print(output_path)
             self.origin_code = self.load_code(filepath)
             # ipynb2py(filepath, output_path)
@@ -544,7 +544,7 @@ class Preprocessing:
         
         #print(self.code.split('\n')[self.end_index])
         #print('self.end_index',self.end_index)
-        with open("HAIPipeGen/new_data/prenotebook_varibles_index/"+str(self.notebook_id)+".json", 'w') as f:
+        with open("HAIPipeGen/tmpdata/prenotebook_varibles_index/"+str(self.notebook_id)+".json", 'w') as f:
             json.dump( {'x_varible':self.X_varible, 'end_idnex': self.end_index}, f)
 
         # for index,line in enumerate(code_list):
@@ -578,7 +578,7 @@ class Preprocessing:
         self.code += 'y_pred = model.predict(' + self.x_test_varible +')\n'
         self.code += 'score = ' +  metric_type +'(' + self.y_test_varible +', y_pred)\n'
         self.code += 'import numpy as np\n'
-        self.code += 'np.save("HAIPipeGen/new_data/' + save_file_path +'", { "' + metric_type+'": score })\n'
+        self.code += 'np.save("HAIPipeGen/tmpdata/' + save_file_path +'", { "' + metric_type+'": score })\n'
         # self.code += 'import pandas as pd\n'
         # self.code += 'if type(' + self.x_train_varible + ').__name__ == "ndarray":\n'
         # self.code += '    np.save("' + self.train_feature_file + '.npy' + '", ' + self.x_train_varible + ')\n'
@@ -797,7 +797,7 @@ class Preprocessing:
         self.change_train_test_split(result_id)
         res = self.add_model_code()
         #print(self.code)
-        self.save_code('HAIPipeGen/new_data/prenotebook_code/')
+        self.save_code('HAIPipeGen/tmpdata/prenotebook_code/')
         return res
 
     def run_origin_test(self, notebook_id, need_try_again):
@@ -807,10 +807,10 @@ class Preprocessing:
         self.code = self.run_one_code(notebook_id, self.code, dataset_root_path + self.info_triple[notebook_id]['dataset_name'], 0)
         if self.code != '' and self.code != "False" and self.code != "compile fail":
             # #print("saving")
-            self.save_code('HAIPipeGen/new_data/runned_notebook/')
+            self.save_code('HAIPipeGen/tmpdata/runned_notebook/')
             end = time.time()
             running_time[notebook_id] = end-start
-            with open('HAIPipeGen/new_data/human_running_time_1.json','w') as f:
+            with open('HAIPipeGen/tmpdata/human_running_time_1.json','w') as f:
                 json.dump(running_time,f)
         else:
             if need_try_again == 2:
@@ -839,8 +839,8 @@ class Preprocessing:
         add_faile = 0
         self.run_faile = 0
         all_ = 0
-        if os.path.exists('HAIPipeGen/new_data/human_running_time_1.json'):
-            with open('HAIPipeGen/new_data/human_running_time_1.json','r') as f:
+        if os.path.exists('HAIPipeGen/tmpdata/human_running_time_1.json'):
+            with open('HAIPipeGen/tmpdata/human_running_time_1.json','r') as f:
                 running_time = json.load(f)
         else:
             running_time = {}
@@ -887,10 +887,10 @@ class Preprocessing:
         #         #print('save_code', res)
         #         if self.info_triple[notebook_id]['model_type'] == 'LinearRegression':
         #             linear_reg += 1
-        #             if os.path.exists('HAIPipeGen/new_data/runned_notebook/'+ str(self.notebook_id) + '.py'):
-        #                 os.system('rm HAIPipeGen/new_data/runned_notebook/'+ str(self.notebook_id) + '.py')
-        #             if os.path.exists('HAIPipeGen/new_data/prenotebook_res/'+ str(self.notebook_id) + '.npy'):
-        #                 os.system('rm HAIPipeGen/new_data/prenotebook_res/'+ str(self.notebook_id) + '.npy')
+        #             if os.path.exists('HAIPipeGen/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py'):
+        #                 os.system('rm HAIPipeGen/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py')
+        #             if os.path.exists('HAIPipeGen/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy'):
+        #                 os.system('rm HAIPipeGen/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy')
         #         else:
         #             if res == True:
         #                 self.run_origin_test(notebook_id, need_try_again=2)
@@ -931,10 +931,10 @@ class Preprocessing:
             all_ += 1
             #print("#########")
             #print(notebook_id)
-            #print("/HAIPipeGen/new_data/prenotebook_res/" + notebook_id+".npy")
+            #print("/HAIPipeGen/tmpdata/prenotebook_res/" + notebook_id+".npy")
             # if notebook_id != "bparesh_extensive-eda-models-logistic-random-forest":
             #     continue
-            # if os.path.exists("/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_res/" + notebook_id+".npy"):
+            # if os.path.exists("/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_res/" + notebook_id+".npy"):
             #     #print("............")
             #     continue
             if not os.path.exists("../data/notebook/" + str(notebook_id) +'.ipynb'):
@@ -943,10 +943,10 @@ class Preprocessing:
             #print('save_code', res)
             if self.info_triple[notebook_id]['model_type'] == 'LinearRegression':
                 linear_reg += 1
-                if os.path.exists('HAIPipeGen/new_data/runned_notebook/'+ str(self.notebook_id) + '.py'):
-                    os.system('rm HAIPipeGen/new_data/runned_notebook/'+ str(self.notebook_id) + '.py')
-                if os.path.exists('HAIPipeGen/new_data/prenotebook_res/'+ str(self.notebook_id) + '.npy'):
-                    os.system('rm HAIPipeGen/new_data/prenotebook_res/'+ str(self.notebook_id) + '.npy')
+                if os.path.exists('HAIPipeGen/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py'):
+                    os.system('rm HAIPipeGen/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py')
+                if os.path.exists('HAIPipeGen/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy'):
+                    os.system('rm HAIPipeGen/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy')
             else:
                 if res == True:
                     self.run_origin_test(notebook_id, need_try_again=2)
@@ -1017,32 +1017,32 @@ def run_path(path, replace_code, test, running_id=None, force_rerun=False):
         # return
     # if test:
     #     if running_id !=None:
-    #         if not os.path.exists("HAIPipeGen/new_data/merged_result_1_"+str(running_id)+"/"+str(notebook_id)):
-    #             os.mkdir("HAIPipeGen/new_data/merged_result_1_"+str(running_id)+"/"+str(notebook_id))
-    #         if os.path.exists('HAIPipeGen/new_data/merged_result_1_'+str(running_id)+"/"+str(notebook_id)+"/"+str(seq_id)+".npy") and force_rerun==False:
+    #         if not os.path.exists("HAIPipeGen/tmpdata/merged_result_1_"+str(running_id)+"/"+str(notebook_id)):
+    #             os.mkdir("HAIPipeGen/tmpdata/merged_result_1_"+str(running_id)+"/"+str(notebook_id))
+    #         if os.path.exists('HAIPipeGen/tmpdata/merged_result_1_'+str(running_id)+"/"+str(notebook_id)+"/"+str(seq_id)+".npy") and force_rerun==False:
     #             return
     #         global running_time
     #         if str(notebook_id) in running_time:
     #             if seq_id in running_time[str(notebook_id)] and force_rerun==False:
     #                 return
     #     else:
-    #         if not os.path.exists("HAIPipeGen/new_data/merged_result_1/"+str(notebook_id)):
-    #             os.mkdir("HAIPipeGen/new_data/merged_result_1/"+str(notebook_id))
-    #         if os.path.exists('HAIPipeGen/new_data/merged_result_1/'+str(notebook_id)+"/"+str(seq_id)+".npy") and force_rerun==False:
+    #         if not os.path.exists("HAIPipeGen/tmpdata/merged_result_1/"+str(notebook_id)):
+    #             os.mkdir("HAIPipeGen/tmpdata/merged_result_1/"+str(notebook_id))
+    #         if os.path.exists('HAIPipeGen/tmpdata/merged_result_1/'+str(notebook_id)+"/"+str(seq_id)+".npy") and force_rerun==False:
     #             return
     #         if str(notebook_id) in running_time:
     #             if seq_id in running_time[str(notebook_id)] and force_rerun==False:
     #                 return
     # else:
-    #     # if not os.path.exists("HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)):
-    #     #     os.mkdir("HAIPipeGen/new_data/merge_result_data/"+str(notebook_id))
-    #     # if os.path.exists('HAIPipeGen/new_data/merge_result_data/'+str(notebook_id)+"/"+str(seq_id)+".npy") and force_rerun==False:
+    #     # if not os.path.exists("HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)):
+    #     #     os.mkdir("HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id))
+    #     # if os.path.exists('HAIPipeGen/tmpdata/merge_result_data/'+str(notebook_id)+"/"+str(seq_id)+".npy") and force_rerun==False:
     #     #     return
 
     #     global validation_running_time
         
-    #     if os.path.exists("HAIPipeGen/new_data/validation_running_time_cross.json"):
-    #         with open("HAIPipeGen/new_data/validation_running_time_cross.json", 'r') as f:
+    #     if os.path.exists("HAIPipeGen/tmpdata/validation_running_time_cross.json"):
+    #         with open("HAIPipeGen/tmpdata/validation_running_time_cross.json", 'r') as f:
     #             validation_running_time = json.load(f)
     #     else:
     #         validation_running_time = {}
@@ -1060,11 +1060,11 @@ def run_path(path, replace_code, test, running_id=None, force_rerun=False):
     if len(replace_code) > 0:
         #print("??????")
         code = code.replace("cross_val_res/"+notebook_id +'.npy', replace_code+notebook_id+'/' + seq_id+'.npy')
-        #print('HAIPipeGen/new_data/'+replace_code + notebook_id)
-        #print(not os.path.exists('HAIPipeGen/new_data/'+replace_code + notebook_id))
-        if not os.path.exists('HAIPipeGen/new_data/'+replace_code + notebook_id):
-            #print('mkdir ', 'HAIPipeGen/new_data/'+replace_code + notebook_id)
-            os.mkdir('HAIPipeGen/new_data/'+replace_code + notebook_id)
+        #print('HAIPipeGen/tmpdata/'+replace_code + notebook_id)
+        #print(not os.path.exists('HAIPipeGen/tmpdata/'+replace_code + notebook_id))
+        if not os.path.exists('HAIPipeGen/tmpdata/'+replace_code + notebook_id):
+            #print('mkdir ', 'HAIPipeGen/tmpdata/'+replace_code + notebook_id)
+            os.mkdir('HAIPipeGen/tmpdata/'+replace_code + notebook_id)
     new_c = ''
     lines = code.split('\n')
     for index,line in enumerate(lines):
@@ -1106,35 +1106,35 @@ def run_path(path, replace_code, test, running_id=None, force_rerun=False):
         # global running_time
         if running_id != None:
             running_time[str(notebook_id)][seq_id] = end-start_time
-            with open("HAIPipeGen/new_data/running_time_"+str(running_id)+".json", 'w') as f:
+            with open("HAIPipeGen/tmpdata/running_time_"+str(running_id)+".json", 'w') as f:
                 json.dump(running_time, f)
         else:
             running_time[str(notebook_id)][seq_id] = end-start_time
-            with open("HAIPipeGen/new_data/running_time.json", 'w') as f:
+            with open("HAIPipeGen/tmpdata/running_time.json", 'w') as f:
                 json.dump(running_time, f)
     # else:
     #     # global validation_running_time
     #     # global validation_running_time
     #     if running_id != None:
-    #         if os.path.exists("HAIPipeGen/new_data/validation_running_time_"+str(running_id)+".json"):
-    #             with open("HAIPipeGen/new_data/validation_running_time_"+str(running_id)+".json", 'r') as f:
-    #                 #print("HAIPipeGen/new_data/validation_running_time_"+str(running_id)+".json")
+    #         if os.path.exists("HAIPipeGen/tmpdata/validation_running_time_"+str(running_id)+".json"):
+    #             with open("HAIPipeGen/tmpdata/validation_running_time_"+str(running_id)+".json", 'r') as f:
+    #                 #print("HAIPipeGen/tmpdata/validation_running_time_"+str(running_id)+".json")
     #                 validation_running_time = json.load(f)
     #         if str(notebook_id) not in validation_running_time:
     #             validation_running_time[str(notebook_id)] = {}
     #         validation_running_time[str(notebook_id)][seq_id] = end-start_time
-    #         with open("HAIPipeGen/new_data/validation_running_time_"+str(running_id)+".json", 'w') as f:
+    #         with open("HAIPipeGen/tmpdata/validation_running_time_"+str(running_id)+".json", 'w') as f:
     #             json.dump(validation_running_time, f)
     #     else:
-    #         if os.path.exists("HAIPipeGen/new_data/validation_running_time_cross.json"):
-    #             with open("HAIPipeGen/new_data/validation_running_time_cross.json", 'r') as f:
+    #         if os.path.exists("HAIPipeGen/tmpdata/validation_running_time_cross.json"):
+    #             with open("HAIPipeGen/tmpdata/validation_running_time_cross.json", 'r') as f:
     #                 validation_running_time = json.load(f)
     #         if str(notebook_id) not in validation_running_time:
     #             validation_running_time[str(notebook_id)] = {}
     #         validation_running_time[str(notebook_id)][seq_id] = end-start_time
     #         # #print("xxxxxxxxxx")
     #         # #print(validation_running_time)
-    #         with open("HAIPipeGen/new_data/validation_running_time_cross.json", 'w') as f:
+    #         with open("HAIPipeGen/tmpdata/validation_running_time_cross.json", 'w') as f:
     #             json.dump(validation_running_time, f)
 
 def run_notebook_only():
@@ -1193,7 +1193,7 @@ def run_test(batch_id, running_id=None , spe_notebook_id=None, spe_seq_id=None, 
 
 
 def run_origin_validation():
-    filenamelist = os.listdir('../staticfg-master/HAIPipeGen/new_data/validation_prenotebook_code')
+    filenamelist = os.listdir('../staticfg-master/HAIPipeGen/tmpdata/validation_prenotebook_code')
     # with open("../staticfg-master/validation_merged_best_index.json",'r') as f:
         # validation_merged_best_index = json.load(f)
     split_len = int(len(filenamelist)/9)
@@ -1209,11 +1209,11 @@ def run_origin_validation():
             #print(notebook_id)
             # if notebook_id != '4444309':
                 # continue
-            if os.path.exists('HAIPipeGen/new_data/validation_prenotebook_res/'+str(notebook_id)+'.npy'):
+            if os.path.exists('HAIPipeGen/tmpdata/validation_prenotebook_res/'+str(notebook_id)+'.npy'):
                 continue
             notebook_id_py = notebook_id + '.py'
 
-            run_origin_path('HAIPipeGen/new_data/validation_prenotebook_code/'+notebook_id_py)
+            run_origin_path('HAIPipeGen/tmpdata/validation_prenotebook_code/'+notebook_id_py)
             # os.system('python validation_prenotebook_code/'+notebook_id_py)
 
 def load_code_1(path, test):
@@ -1265,11 +1265,11 @@ def run_path_1(path, replace_code, test, running_id=None, force_rerun=False):
     if len(replace_code) > 0:
         #print("??????")
         code = code.replace("prenotebook_res/"+notebook_id +'.npy', replace_code+notebook_id+'/' + seq_id+'.npy')
-        #print('HAIPipeGen/new_data/'+replace_code + notebook_id)
-        #print(not os.path.exists('HAIPipeGen/new_data/'+replace_code + notebook_id))
-        if not os.path.exists('HAIPipeGen/new_data/'+replace_code + notebook_id):
-            #print('mkdir ', 'HAIPipeGen/new_data/'+replace_code + notebook_id)
-            os.mkdir('HAIPipeGen/new_data/'+replace_code + notebook_id)
+        #print('HAIPipeGen/tmpdata/'+replace_code + notebook_id)
+        #print(not os.path.exists('HAIPipeGen/tmpdata/'+replace_code + notebook_id))
+        if not os.path.exists('HAIPipeGen/tmpdata/'+replace_code + notebook_id):
+            #print('mkdir ', 'HAIPipeGen/tmpdata/'+replace_code + notebook_id)
+            os.mkdir('HAIPipeGen/tmpdata/'+replace_code + notebook_id)
     new_c = ''
     lines = code.split('\n')
     for index,line in enumerate(lines):
@@ -1303,7 +1303,7 @@ def run_notebook_path(path, replace_code, test, running_id=None, force_rerun=Fal
     if len(replace_code) > 0:
         #print("??????")
         code = code.replace("prenotebook_res/"+notebook_id +'.npy', replace_code+notebook_id+'.npy')
-        #print('HAIPipeGen/new_data/'+replace_code + notebook_id)
+        #print('HAIPipeGen/tmpdata/'+replace_code + notebook_id)
 
     new_c = ''
     lines = code.split('\n')
@@ -1335,24 +1335,24 @@ def run_max_hai():
     with open('max_index_rl.json','r',encoding='utf8')as fp:
         json_data = json.load(fp)
         for notebook_id in json_data:
-            # if len(os.listdir("HAIPipeGen/new_data/merge_max_result_planB/"+str(notebook_id)))!=0:
+            # if len(os.listdir("HAIPipeGen/tmpdata/merge_max_result_planB/"+str(notebook_id)))!=0:
             #     continue
             if str(notebook_id) not in validation_running_time:
                 validation_running_time[str(notebook_id)] = {}
             L = list(json_data[notebook_id].items())
-            if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)):
-                path = os.listdir("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id))
-                if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)+'/'+L[0][0]):
+            if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)):
+                path = os.listdir("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id))
+                if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)+'/'+L[0][0]):
                     continue
                 elif len(path)!=0:
-                    os.remove("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)+'/'+path[0])
+                    os.remove("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)+'/'+path[0])
             for index,seq_id_file_ in  enumerate(json_data[notebook_id]):              
-                if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)) and len(os.listdir("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)))!=0:
+                if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)) and len(os.listdir("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)))!=0:
                     break
                 if seq_id_file_ != "origin.npy":
                     item_name = seq_id_file_.split(".npy")[0]
                     item = item_name + ".json"
-                    if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)+'/'+seq_id_file_):
+                    if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)+'/'+seq_id_file_):
                         continue
                     start_time = time.time()
                     run_path_1('rl_test_merge_code/'+notebook_id+'/'+item, replace_code = 'merge_max_result_rl/',test=False)
@@ -1361,11 +1361,11 @@ def run_max_hai():
                     with open("planB_step1_time.json", 'w') as f:
                         json.dump(validation_running_time, f)
                 else:
-                    if not os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)):
-                        os.mkdir("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id))
+                    if not os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)):
+                        os.mkdir("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id))
                     #print(notebook_id)
                     res.append(notebook_id)
-                    shutil.copyfile('HAIPipeGen/new_data/prenotebook_res/'+notebook_id+'.npy', 'HAIPipeGen/new_data/merge_max_result_rl/'+notebook_id+'/origin.npy')
+                    shutil.copyfile('HAIPipeGen/tmpdata/prenotebook_res/'+notebook_id+'.npy', 'HAIPipeGen/tmpdata/merge_max_result_rl/'+notebook_id+'/origin.npy')
                     break
     #print(len(res))
     #print(res)
@@ -1375,40 +1375,40 @@ def run_max_hai_add3():
     with open('planB_cross_max_index_add3_222.json','r',encoding='utf8')as fp:
         json_data = json.load(fp)
         for notebook_id in json_data:
-            # if len(os.listdir("HAIPipeGen/new_data/merge_max_result_planB/"+str(notebook_id)))!=0:
+            # if len(os.listdir("HAIPipeGen/tmpdata/merge_max_result_planB/"+str(notebook_id)))!=0:
             #     continue
-            if os.path.exists("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)):
-                path = os.listdir("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id))
+            if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)):
+                path = os.listdir("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id))
                 # #print(json_data[notebook_id])
                 L = list(json_data[notebook_id].items())
                 # #print(L[0][1])
-                if os.path.exists("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)+'/'+L[0][0]):
+                if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)+'/'+L[0][0]):
                     continue
                 elif len(path)!=0:
-                    os.remove("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)+'/'+path[0])
+                    os.remove("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)+'/'+path[0])
             for index,seq_id_file_ in  enumerate(json_data[notebook_id]):              
-                if os.path.exists("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)) and len(os.listdir("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)))!=0:
+                if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)) and len(os.listdir("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)))!=0:
                     break
                 
                 if seq_id_file_ != "origin.npy":
                     item_name = seq_id_file_.split(".npy")[0]
                     item = item_name + ".json"
-                    if os.path.exists("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)+'/'+seq_id_file_):
+                    if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)+'/'+seq_id_file_):
                         continue
                     run_path_1('planB_test_merge_code_add_rule3/'+notebook_id+'/'+item, replace_code = 'merge_max_result_planB_add3/',test=False)
                     
                 else:
-                    if not os.path.exists("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id)):
-                        os.mkdir("HAIPipeGen/new_data/merge_max_result_planB_add3/"+str(notebook_id))
+                    if not os.path.exists("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id)):
+                        os.mkdir("HAIPipeGen/tmpdata/merge_max_result_planB_add3/"+str(notebook_id))
                     #print(notebook_id)
                     res.append(notebook_id)
-                    shutil.copyfile('HAIPipeGen/new_data/prenotebook_res/'+notebook_id+'.npy', 'HAIPipeGen/new_data/merge_max_result_planB_add3/'+notebook_id+'/origin.npy')
+                    shutil.copyfile('HAIPipeGen/tmpdata/prenotebook_res/'+notebook_id+'.npy', 'HAIPipeGen/tmpdata/merge_max_result_planB_add3/'+notebook_id+'/origin.npy')
                     break
     #print(len(res))
     #print(res)
 
 def run_validation():
-    # notebooks = os.listdir('HAIPipeGen/new_data/prenotebook_res/')
+    # notebooks = os.listdir('HAIPipeGen/tmpdata/prenotebook_res/')
     with open('return_cross.json','r') as f:
             notebooks = json.load(f)
     exist_f = open("/home/yxm/staticfg-master/shibai.txt", "r")
@@ -1418,7 +1418,7 @@ def run_validation():
     notebook_m = os.listdir('merge_code_1')
     # notebooks = list(set(notebooks) & set(notebook_m))
     # notebooks = list(set(notebooks) & set(exitst_))
-    notebooks = os.listdir('HAIPipeGen/new_data/cross_val_res')
+    notebooks = os.listdir('HAIPipeGen/tmpdata/cross_val_res')
     notebooks = list(set(notebooks) & set(notebook_m))
     for notebook_id in exitst_:
         
@@ -1440,10 +1440,10 @@ def run_validation():
         # if notebook_id == "arunimsamudra_heart-disease-data-visualisation-and-prediction" :#太慢了xgb
         #     continue     
 
-        filelist = os.listdir('HAIPipeGen/new_data/cross_validation_code/'+notebook_id)
+        filelist = os.listdir('HAIPipeGen/tmpdata/cross_validation_code/'+notebook_id)
         # filelist.sort()
-        # if not os.path.exists("HAIPipeGen/new_data/merge_validation_result_1600/"+notebook_id):
-            # os.mkdir("HAIPipeGen/new_data/merge_validation_result_1600/"+notebook_id)
+        # if not os.path.exists("HAIPipeGen/tmpdata/merge_validation_result_1600/"+notebook_id):
+            # os.mkdir("HAIPipeGen/tmpdata/merge_validation_result_1600/"+notebook_id)
         # if notebook_id != "1395715" :
         #     continue 
         # if len(filelist)<=1000:
@@ -1459,7 +1459,7 @@ def run_validation():
                 
             # if item.split('.')[0] != analyze_score[notebook_id]['best_index'].split('.')[0]:
                 # continue
-            if os.path.exists("HAIPipeGen/new_data/cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
+            if os.path.exists("HAIPipeGen/tmpdata/cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
                 continue
             # if notebook_id != str(322282) or item !='25.json':
             #     continue
@@ -1469,11 +1469,11 @@ def run_validation():
             #     continue
             start_time = time.time()
             try:
-                run_path('HAIPipeGen/new_data/cross_validation_code/'+notebook_id+'/'+item, replace_code = 'cross_val_res/',test=False)
+                run_path('HAIPipeGen/tmpdata/cross_validation_code/'+notebook_id+'/'+item, replace_code = 'cross_val_res/',test=False)
             # except:
             except func_timeout.exceptions.FunctionTimedOut:
-                if os.path.exists("HAIPipeGen/new_data/validation_running_time_cross.json"):
-                    with open("HAIPipeGen/new_data/validation_running_time_cross.json", 'r') as f:
+                if os.path.exists("HAIPipeGen/tmpdata/validation_running_time_cross.json"):
+                    with open("HAIPipeGen/tmpdata/validation_running_time_cross.json", 'r') as f:
                         validation_running_time = json.load(f)
                 if str(notebook_id) not in validation_running_time:
                     validation_running_time[str(notebook_id)] = {}
@@ -1482,7 +1482,7 @@ def run_validation():
                 validation_running_time[str(notebook_id)][seq_id] = end-start_time
                 # #print("xxxxxxxxxx")
                 # #print(validation_running_time)
-                with open("HAIPipeGen/new_data/validation_running_time_cross.json", 'w') as f:
+                with open("HAIPipeGen/tmpdata/validation_running_time_cross.json", 'w') as f:
                     json.dump(validation_running_time, f)
                 #print('执行函数超时')
             gc.collect()
@@ -1490,11 +1490,11 @@ def run_validation():
         # break
         # gc.collect()
 def run_validation_planB():
-    # notebooks = os.listdir('HAIPipeGen/new_data/prenotebook_res/')
-    notebooks = os.listdir('HAIPipeGen/new_data/planB_cross_validation_code')
+    # notebooks = os.listdir('HAIPipeGen/tmpdata/prenotebook_res/')
+    notebooks = os.listdir('HAIPipeGen/tmpdata/planB_cross_validation_code')
     notebooks.sort()
-    if os.path.exists("HAIPipeGen/new_data/planB_validation_running_time_cross.json"):
-        with open("HAIPipeGen/new_data/planB_validation_running_time_cross.json", 'r') as f:
+    if os.path.exists("HAIPipeGen/tmpdata/planB_validation_running_time_cross.json"):
+        with open("HAIPipeGen/tmpdata/planB_validation_running_time_cross.json", 'r') as f:
             validation_running_time = json.load(f)
     else:
         validation_running_time = {}
@@ -1507,11 +1507,11 @@ def run_validation_planB():
             continue
         # if index<=150:
         #     continue
-        filelist = os.listdir('HAIPipeGen/new_data/planB_cross_validation_code/'+notebook_id)
+        filelist = os.listdir('HAIPipeGen/tmpdata/planB_cross_validation_code/'+notebook_id)
         if str(notebook_id) not in validation_running_time:
             validation_running_time[str(notebook_id)] = {}
         for item in filelist:
-            if os.path.exists("HAIPipeGen/new_data/planB_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
+            if os.path.exists("HAIPipeGen/tmpdata/planB_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
                 continue
             # if notebook_id != str(322282) or item !='25.json':
             #     continue
@@ -1523,32 +1523,32 @@ def run_validation_planB():
             start_time = time.time()
             seq_id = item.split('.json')[0]
             try:
-                run_path('HAIPipeGen/new_data/planB_cross_validation_code/'+notebook_id+'/'+item, replace_code = 'planB_cross_val_res/',test=False)
+                run_path('HAIPipeGen/tmpdata/planB_cross_validation_code/'+notebook_id+'/'+item, replace_code = 'planB_cross_val_res/',test=False)
             # except:
             except func_timeout.exceptions.FunctionTimedOut:
-                if os.path.exists("HAIPipeGen/new_data/planB_validation_running_time_cross.json"):
-                    with open("HAIPipeGen/new_data/planB_validation_running_time_cross.json", 'r') as f:
+                if os.path.exists("HAIPipeGen/tmpdata/planB_validation_running_time_cross.json"):
+                    with open("HAIPipeGen/tmpdata/planB_validation_running_time_cross.json", 'r') as f:
                         validation_running_time = json.load(f)
                 if str(notebook_id) not in validation_running_time:
                     validation_running_time[str(notebook_id)] = {}
                 end = time.time()
                 validation_running_time[str(notebook_id)][seq_id] = end-start_time
-                with open("HAIPipeGen/new_data/planB_validation_running_time_cross.json", 'w') as f:
+                with open("HAIPipeGen/tmpdata/planB_validation_running_time_cross.json", 'w') as f:
                     json.dump(validation_running_time, f)
                 #print('执行函数超时')
             else:
                 end = time.time()
                 validation_running_time[str(notebook_id)][seq_id] = end-start_time
-                with open("HAIPipeGen/new_data/planB_validation_running_time_cross.json", 'w') as f:
+                with open("HAIPipeGen/tmpdata/planB_validation_running_time_cross.json", 'w') as f:
                     json.dump(validation_running_time, f)
             gc.collect()        
  
 def run_validation_rl():
-    # notebooks = os.listdir('HAIPipeGen/new_data/prenotebook_res/')
-    notebooks = os.listdir('HAIPipeGen/new_data/rl_cross_validation_code')
+    # notebooks = os.listdir('HAIPipeGen/tmpdata/prenotebook_res/')
+    notebooks = os.listdir('HAIPipeGen/tmpdata/rl_cross_validation_code')
     notebooks.sort()
-    if os.path.exists("HAIPipeGen/new_data/rl_validation_running_time_cross.json"):
-        with open("HAIPipeGen/new_data/rl_validation_running_time_cross.json", 'r') as f:
+    if os.path.exists("HAIPipeGen/tmpdata/rl_validation_running_time_cross.json"):
+        with open("HAIPipeGen/tmpdata/rl_validation_running_time_cross.json", 'r') as f:
             validation_running_time = json.load(f)
     else:
         validation_running_time = {}
@@ -1558,11 +1558,11 @@ def run_validation_rl():
         #     #print(notebook_id)
             # continue
         # #print(index)
-        filelist = os.listdir('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id)
+        filelist = os.listdir('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id)
         if str(notebook_id) not in validation_running_time:
             validation_running_time[str(notebook_id)] = {}
         for item in filelist:
-            if os.path.exists("HAIPipeGen/new_data/rl_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
+            if os.path.exists("HAIPipeGen/tmpdata/rl_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
                 continue
             # if notebook_id != str(322282) or item !='25.json':
             #     continue
@@ -1574,23 +1574,23 @@ def run_validation_rl():
             start_time = time.time()
             seq_id = item.split('.json')[0]
             try:
-                run_path('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id+'/'+item, replace_code = 'rl_cross_val_res/',test=False)
+                run_path('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id+'/'+item, replace_code = 'rl_cross_val_res/',test=False)
             # except:
             except func_timeout.exceptions.FunctionTimedOut:
-                if os.path.exists("HAIPipeGen/new_data/rl_validation_running_time_cross.json"):
-                    with open("HAIPipeGen/new_data/rl_validation_running_time_cross.json", 'r') as f:
+                if os.path.exists("HAIPipeGen/tmpdata/rl_validation_running_time_cross.json"):
+                    with open("HAIPipeGen/tmpdata/rl_validation_running_time_cross.json", 'r') as f:
                         validation_running_time = json.load(f)
                 if str(notebook_id) not in validation_running_time:
                     validation_running_time[str(notebook_id)] = {}
                 end = time.time()
                 validation_running_time[str(notebook_id)][seq_id] = end-start_time
-                with open("HAIPipeGen/new_data/rl_validation_running_time_cross.json", 'w') as f:
+                with open("HAIPipeGen/tmpdata/rl_validation_running_time_cross.json", 'w') as f:
                     json.dump(validation_running_time, f)
                 #print('执行函数超时')
             else:
                 end = time.time()
                 validation_running_time[str(notebook_id)][seq_id] = end-start_time
-                with open("HAIPipeGen/new_data/rl_validation_running_time_cross.json", 'w') as f:
+                with open("HAIPipeGen/tmpdata/rl_validation_running_time_cross.json", 'w') as f:
                     json.dump(validation_running_time, f)
             gc.collect()
         
@@ -1629,19 +1629,19 @@ def how_much_run():
     for notebook_id in notebooks:
         # try:
         all_ += 1
-        if os.path.exists("../staticfg-master/deepline_only_HAIPipeGen/new_data/"+ str(notebook_id) + "_score.json"):
+        if os.path.exists("../staticfg-master/deepline_only_HAIPipeGen/tmpdata/"+ str(notebook_id) + "_score.json"):
             d_exist += 1
-        if os.path.exists("../staticfg-master/HAIPipeGen/new_data/prenotebook_res/"+ str(notebook_id) + ".npy"):
+        if os.path.exists("../staticfg-master/HAIPipeGen/tmpdata/prenotebook_res/"+ str(notebook_id) + ".npy"):
             h_exist += 1
-    #print('runed', len(os.listdir("../staticfg-master/HAIPipeGen/new_data/prenotebook_res/")))
+    #print('runed', len(os.listdir("../staticfg-master/HAIPipeGen/tmpdata/prenotebook_res/")))
     #print('deepline exist', d_exist)
     #print('human exist', h_exist)
     #print('all', all_)
-    runed_list = os.listdir('HAIPipeGen/new_data/prenotebook_res')
+    runed_list = os.listdir('HAIPipeGen/tmpdata/prenotebook_res')
     with open("runed1.json",'w') as f:
         json.dump(runed_list,f)
 def run_validation_new():
-    notebooks = os.listdir('HAIPipeGen/new_data/merge_validation_code_new')
+    notebooks = os.listdir('HAIPipeGen/tmpdata/merge_validation_code_new')
     for notebook_id_file in notebooks:
         notebook_id = notebook_id_file.split('.')[0]
         exist_f = open("/home/yxm/staticfg-master/test_error.txt", "r")
@@ -1669,7 +1669,7 @@ def run_validation_new():
             continue
         if notebook_id == 'atilayyinanc_telco-churn':#跑完
             continue
-        filelist = os.listdir('HAIPipeGen/new_data/merge_validation_code_new/'+notebook_id)
+        filelist = os.listdir('HAIPipeGen/tmpdata/merge_validation_code_new/'+notebook_id)
         # filelist.sort()
         # if notebook_id != "championrunner_graduate-admissions" :
         #     continue 
@@ -1678,12 +1678,12 @@ def run_validation_new():
             #     continue
             if item == "7.json" and notebook_id == "sidsiddu_kernal-svm":
                 continue
-            if os.path.exists("HAIPipeGen/new_data/merge_validation_result_new/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
+            if os.path.exists("HAIPipeGen/tmpdata/merge_validation_result_new/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
                 continue
             #print("item,", item)
             #print("notebook,",notebook_id)
             try:
-                run_path('HAIPipeGen/new_data/merge_validation_code_new/'+notebook_id+'/'+item, replace_code = 'merge_validation_result_new/',test=False)
+                run_path('HAIPipeGen/tmpdata/merge_validation_code_new/'+notebook_id+'/'+item, replace_code = 'merge_validation_result_new/',test=False)
             # except:
             except func_timeout.exceptions.FunctionTimedOut:
                 print('执行函数超时')
@@ -1719,19 +1719,19 @@ def run_path_base(path, replace_code, test, running_id=None, force_rerun=False):
     if len(replace_code) > 0:
         #print("??????")
         code = code.replace("prenotebook_res/"+notebook_id +'.npy', replace_code + task +'.npy')
-        #print('HAIPipeGen/new_data/'+replace_code + task)
+        #print('HAIPipeGen/tmpdata/'+replace_code + task)
     #print(code)
     code = pro.run_one_code(task, code, dataset_root_path + tasks[task]['dataset'], 0)
 def run_base():
     res = []
-    path = os.listdir('HAIPipeGen/new_data/base_code')
+    path = os.listdir('HAIPipeGen/tmpdata/base_code')
     for task in path:
         # if task != 'adammaus_predicting-churn-for-bank-customers_SVC_13.json':
         #     continue
         task_id = task.split('.json')[0]
-        if os.path.exists("HAIPipeGen/new_data/base_result/"+str(task_id)+'.npy'):
+        if os.path.exists("HAIPipeGen/tmpdata/base_result/"+str(task_id)+'.npy'):
             continue
-        run_path_base('HAIPipeGen/new_data/base_code/'+task, replace_code = 'HAIPipeGen/new_data/base_result/',test=False)
+        run_path_base('HAIPipeGen/tmpdata/base_code/'+task, replace_code = 'HAIPipeGen/tmpdata/base_result/',test=False)
         res.append(task)
     #print(len(res))
     #print(res)
@@ -1754,8 +1754,8 @@ def final_planB_hai():
     origin_notebooks = []
     for notebook_id in run_code_filelist:
         seq_list = os.listdir('transdata/this_planB_test_merge_code_max/' + notebook_id)
-        if not os.path.exists('HAIPipeGen/new_data/final_planB_hai'):
-            os.mkdir('HAIPipeGen/new_data/final_planB_hai')
+        if not os.path.exists('HAIPipeGen/tmpdata/final_planB_hai'):
+            os.mkdir('HAIPipeGen/tmpdata/final_planB_hai')
         if notebook_id != 'kaggledroid_predicting-heart-disease-using-ensemble':
             continue
         if len(seq_list) == 0:
@@ -1765,7 +1765,7 @@ def final_planB_hai():
         
         seq_id = seq_list[0].split('.')[0]
         #print('notebook_id', notebook_id)
-        if os.path.exists('HAIPipeGen/new_data/final_planB_hai/'+notebook_id + '/' + seq_id + '.npy'):
+        if os.path.exists('HAIPipeGen/tmpdata/final_planB_hai/'+notebook_id + '/' + seq_id + '.npy'):
             continue
         run_path_1('transdata/this_planB_test_merge_code_max/'+notebook_id + '/' + seq_id + '.json', replace_code = 'final_planB_hai/',test=False)
     # with open('origin_planB_notebooks.json','w') as f:
@@ -1777,50 +1777,33 @@ def final_rl_hai():
     origin_notebooks = []
     for notebook_id in run_code_filelist:
         seq_list = os.listdir('transdata/this_rl_test_merge_code_max/' + notebook_id)
-        if not os.path.exists('HAIPipeGen/new_data/final_rl_hai'):
-            os.mkdir('HAIPipeGen/new_data/final_rl_hai')
+        if not os.path.exists('HAIPipeGen/tmpdata/final_rl_hai'):
+            os.mkdir('HAIPipeGen/tmpdata/final_rl_hai')
         if len(seq_list) == 0:
             origin_notebooks.append(notebook_id)
             # print
             continue
         seq_id = seq_list[0].split('.')[0]
         #print('notebook_id', notebook_id)
-        if os.path.exists('HAIPipeGen/new_data/final_rl_hai/'+notebook_id + '/' + seq_id + '.npy'):
+        if os.path.exists('HAIPipeGen/tmpdata/final_rl_hai/'+notebook_id + '/' + seq_id + '.npy'):
             continue
         run_path_1('transdata/this_rl_test_merge_code_max/'+notebook_id + '/' + seq_id + '.json', replace_code = 'final_rl_hai/',test=False)
     # with open('origin_rl_notebooks.json','w') as f:
         # json.dump(origin_notebooks, f)
-def run_one_hi(notebook_id):
-    pro = Preprocessing()
-    if not os.path.exists('HAIPipeGen/new_data/prenotebook_code'):
-        os.mkdir('HAIPipeGen/new_data/prenotebook_code')
-    if not os.path.exists('HAIPipeGen/new_data/runned_notebook'):
-        os.mkdir('HAIPipeGen/new_data/runned_notebook')
-    if not os.path.exists('HAIPipeGen/new_data/prenotebook_res'):
-        os.mkdir('HAIPipeGen/new_data/prenotebook_res')
-    if not os.path.exists('HAIPipeGen/new_data/prenotebook_varibles_index'):
-        os.mkdir('HAIPipeGen/new_data/prenotebook_varibles_index')
-    res = pro.profiling_code(notebook_id, need_remove_model=1)
-    add_faile = 0
-    #print('save_code', res)
-    
-    if res == True:
-        pro.run_origin_test(notebook_id, need_try_again=2)
-    else:
-        add_faile += 1
+
 def run_one_validation_rl(notebook_id):
-    filelist = os.listdir('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id)
-    if not os.path.exists('HAIPipeGen/new_data/rl_cross_val_res'):
-        os.mkdir('HAIPipeGen/new_data/rl_cross_val_res')
+    filelist = os.listdir('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id)
+    if not os.path.exists('HAIPipeGen/tmpdata/rl_cross_val_res'):
+        os.mkdir('HAIPipeGen/tmpdata/rl_cross_val_res')
     for item in filelist:
-        # if os.path.exists("HAIPipeGen/new_data/rl_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
+        # if os.path.exists("HAIPipeGen/tmpdata/rl_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
         #     continue
         #print("item,", item)
         #print("notebook,",notebook_id)
         start_time = time.time()
         seq_id = item.split('.json')[0]
         try:
-            run_path('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id+'/'+item, replace_code = 'rl_cross_val_res/',test=False)
+            run_path('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id+'/'+item, replace_code = 'rl_cross_val_res/',test=False)
         except func_timeout.exceptions.FunctionTimedOut:
             print('执行函数超时')
         except:
@@ -1828,28 +1811,28 @@ def run_one_validation_rl(notebook_id):
         gc.collect()
 def run_one_max_hai(notebook_id):
     res = []
-    with open('HAIPipeGen/new_data/max_index.json','r',encoding='utf8')as fp:
+    with open('HAIPipeGen/tmpdata/max_index.json','r',encoding='utf8')as fp:
         json_data = json.load(fp)
     L = list(json_data[notebook_id].items())
-    if not os.path.exists('HAIPipeGen/new_data/merge_max_result_rl'):
-        os.mkdir('HAIPipeGen/new_data/merge_max_result_rl')
-    if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)):
-        path = os.listdir("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id))
-        # if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)+'/'+L[0][0]):
+    if not os.path.exists('HAIPipeGen/tmpdata/merge_max_result_rl'):
+        os.mkdir('HAIPipeGen/tmpdata/merge_max_result_rl')
+    if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)):
+        path = os.listdir("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id))
+        # if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)+'/'+L[0][0]):
         #     return
         if len(path)!=0:
-            os.remove("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)+'/'+path[0])
+            os.remove("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)+'/'+path[0])
     for index,seq_id_file_ in  enumerate(json_data[notebook_id]):              
-        if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)) and len(os.listdir("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)))!=0:
+        if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)) and len(os.listdir("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)))!=0:
             break
         if seq_id_file_ != "origin.npy":
             item_name = seq_id_file_.split(".npy")[0]
             item = item_name + ".json"
-            if os.path.exists("HAIPipeGen/new_data/merge_max_result_rl/"+str(notebook_id)+'/'+seq_id_file_):
+            if os.path.exists("HAIPipeGen/tmpdata/merge_max_result_rl/"+str(notebook_id)+'/'+seq_id_file_):
                 continue
-            run_path_1('HAIPipeGen/new_data/rl_test_merge_code/'+notebook_id+'/'+item, replace_code = 'merge_max_result_rl/',test=False)
+            run_path_1('HAIPipeGen/tmpdata/rl_test_merge_code/'+notebook_id+'/'+item, replace_code = 'merge_max_result_rl/',test=False)
         else:
-            shutil.copyfile('HAIPipeGen/new_data/prenotebook_res/'+notebook_id+'.npy', 'HAIPipeGen/new_data/merge_max_result_rl/'+notebook_id+'/origin.npy')
+            shutil.copyfile('HAIPipeGen/tmpdata/prenotebook_res/'+notebook_id+'.npy', 'HAIPipeGen/tmpdata/merge_max_result_rl/'+notebook_id+'/origin.npy')
             break
 # if __name__ == "__main__":
     # sys.stdout = Logger('running.log')

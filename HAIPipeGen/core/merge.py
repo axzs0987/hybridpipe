@@ -8,11 +8,11 @@ Input: Graph, Code, Operation, Edge
 output: new code
 """
 
-from HAIPipeGen.read_ipynb import ipynb2py
+from HAIPipeGen.core.read_ipynb import ipynb2py
 import json
 import pickle
-from HAIPipeGen.operation_code import OperationCode, OperationType, EdgeOperationType
-from HAIPipeGen.NotebookGraph import NotebookGraph, Node, Edge
+from HAIPipeGen.core.operation_code import OperationCode, OperationType, EdgeOperationType
+from HAIPipeGen.core.NotebookGraph import NotebookGraph, Node, Edge
 import os
 import pprint
 import copy
@@ -72,7 +72,7 @@ class Merger():
         self.running_id = running_id
 
     def load_origin_code(self, notebook_id):
-        filepath = "HAIPipeGen/new_data/prenotebook_code/" + str(notebook_id) + '.py'
+        filepath = "HAIPipeGen/tmpdata/prenotebook_code/" + str(notebook_id) + '.py'
         self.file_path = filepath
         output_path = filepath
         with open(output_path, 'r') as src_file:
@@ -82,7 +82,7 @@ class Merger():
         
     def load_operations(self, notebook_id):
         # filepath = "deepline_only_new_"+str(self.running_id)+"/" + str(notebook_id) + "_seq.json"
-        filepath = "deepline_only_new_data"+ "/" + str(notebook_id) + "_seq.json"
+        filepath = "deepline_only_tmpdata"+ "/" + str(notebook_id) + "_seq.json"
         self.operations = []
         with open(filepath, 'r') as f:
             operations = json.load(f)
@@ -143,10 +143,10 @@ class Merger():
         #             found_task = task
         self.operations = firefly_seq[found_task]
     def load_graph(self, notebook_id):     
-        if os.path.exists('HAIPipeGen/new_data/prenotebook_graph/'+str(notebook_id)+".pkl"):
-            filepath = 'HAIPipeGen/new_data/prenotebook_graph/'+str(notebook_id)+".pkl"
+        if os.path.exists('HAIPipeGen/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl"):
+            filepath = 'HAIPipeGen/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl"
         else:
-            filepath = 'HAIPipeGen/new_data/HAIPipeGen/new_data/prenotebook_graph/'+str(notebook_id)+".pkl"
+            filepath = 'HAIPipeGen/tmpdata/HAIPipeGen/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl"
         with open(filepath, 'rb') as f:
             self.graph = pickle.load(f)  
 
@@ -621,7 +621,7 @@ class Merger():
                 self.code = pre_code  + edge_code + operation_code + after_code
         else:
             # #print('ope',ope)
-            with open("HAIPipeGen/new_data/prenotebook_varibles_index/"+str(notebook_id)+'.json', 'r') as f:
+            with open("HAIPipeGen/tmpdata/prenotebook_varibles_index/"+str(notebook_id)+'.json', 'r') as f:
                 varible_index = json.load(f)
             x_varible = varible_index['x_varible']
             operation_code = OperationCode[ope]['pre_code'] + OperationCode[ope]['code']
@@ -710,9 +710,9 @@ class Merger():
             #     os.mkdir('merge_code_'+str(self.running_id)+'/'+str(notebook_id))
             # with open('merge_code_'+str(self.running_id)+'/'+str(notebook_id)+'/'+str(seq_id)+'.json', 'w') as f:
             #     json.dump({'seq':save_seq, 'code': self.code}, f)
-            if not os.path.exists('merge_code_new_data_1600'+'/'+str(notebook_id)):
-                os.mkdir('merge_code_new_data_1600'+'/'+str(notebook_id))
-            with open('merge_code_new_data_1600'+'/'+str(notebook_id)+'/'+str(seq_id)+'.json', 'w') as f:
+            if not os.path.exists('merge_code_tmpdata_1600'+'/'+str(notebook_id)):
+                os.mkdir('merge_code_tmpdata_1600'+'/'+str(notebook_id))
+            with open('merge_code_tmpdata_1600'+'/'+str(notebook_id)+'/'+str(seq_id)+'.json', 'w') as f:
                 json.dump({'seq':save_seq, 'code': self.code}, f)
             seq_id += 1
             
@@ -842,19 +842,19 @@ class Merger():
             #     os.mkdir('merge_code_'+str(self.running_id)+'/'+str(notebook_id))
             # with open('merge_code_'+str(self.running_id)+'/'+str(notebook_id)+'/'+str(seq_id)+'.json', 'w') as f:
             #     json.dump({'seq':save_seq, 'code': self.code}, f)
-            if not os.path.exists('HAIPipeGen/new_data/rl_test_merge_code'+'/'+str(notebook_id)):
-                os.mkdir('HAIPipeGen/new_data/rl_test_merge_code'+'/'+str(notebook_id))
-            with open('HAIPipeGen/new_data/rl_test_merge_code'+'/'+str(notebook_id)+'/'+str(seq_id)+'.json', 'w') as f:
+            if not os.path.exists('HAIPipeGen/tmpdata/rl_test_merge_code'+'/'+str(notebook_id)):
+                os.mkdir('HAIPipeGen/tmpdata/rl_test_merge_code'+'/'+str(notebook_id))
+            with open('HAIPipeGen/tmpdata/rl_test_merge_code'+'/'+str(notebook_id)+'/'+str(seq_id)+'.json', 'w') as f:
                 json.dump({'seq':save_seq, 'code': self.code}, f)
-            if not os.path.exists('HAIPipeGen/new_data/rl_test_merge_code_py'+'/'+str(notebook_id)):
-                os.mkdir('HAIPipeGen/new_data/rl_test_merge_code_py'+'/'+str(notebook_id))
-            with open('HAIPipeGen/new_data/rl_test_merge_code_py'+'/'+str(notebook_id)+'/'+str(seq_id)+'.py', 'w') as f:
+            if not os.path.exists('HAIPipeGen/tmpdata/rl_test_merge_code_py'+'/'+str(notebook_id)):
+                os.mkdir('HAIPipeGen/tmpdata/rl_test_merge_code_py'+'/'+str(notebook_id))
+            with open('HAIPipeGen/tmpdata/rl_test_merge_code_py'+'/'+str(notebook_id)+'/'+str(seq_id)+'.py', 'w') as f:
                 f.write(self.code)
             seq_id += 1
 
     def count_operations(self):
         # filelist = os.listdir('deepline_only_new_'+str(self.running_id))
-        filelist = os.listdir('deepline_only_new_data')
+        filelist = os.listdir('deepline_only_tmpdata')
         notebooks = set()
         for item in filelist:
             notebooks.add(int(item.split('_')[0]))
@@ -873,7 +873,7 @@ class Merger():
         
     def count_hightlight(self):
         # filelist = os.listdir('deepline_only_new_'+str(self.running_id))
-        filelist = os.listdir('deepline_only_new_data')
+        filelist = os.listdir('deepline_only_tmpdata')
         notebooks = set()
         for item in filelist:
             notebooks.add(int(item.split('_')[0]))
@@ -882,8 +882,8 @@ class Merger():
         num2notebooks = {}
         for notebook_id in list(notebooks):
             highlight = set()
-            # with open('HAIPipeGen/new_data/prenotebook_graph/'+str(notebook_id)+".pkl", 'rb') as f:
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/HAIPipeGen/new_data/prenotebook_graph/'+str(notebook_id)+".pkl", 'rb') as f:
+            # with open('HAIPipeGen/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl", 'rb') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/HAIPipeGen/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl", 'rb') as f:
                 graph = pickle.load(f)
                 for edge in graph.result_edges:
                     if edge.edge_type == 1:
@@ -926,7 +926,7 @@ class Merger():
                 # continue
             #print('notebook_id', notebook_id)
             count += 1
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/HAIPipeGen/new_data/prenotebook_graph/' + notebook_id + '.pkl'): # graph failed
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/HAIPipeGen/tmpdata/prenotebook_graph/' + notebook_id + '.pkl'): # graph failed
                 continue
             try:
                 merger.merging_one_notebook_planb(notebook_id)
@@ -985,7 +985,7 @@ class Merger():
                 # continue
             #print('notebook_id', notebook_id)
             count += 1
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/HAIPipeGen/new_data/prenotebook_graph/' + notebook_id + '.pkl'): # graph failed
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/HAIPipeGen/tmpdata/prenotebook_graph/' + notebook_id + '.pkl'): # graph failed
                 continue
             if os.path.exists("rl_step2_merge_time.json"):
                 with open("rl_step2_merge_time.json", 'r') as f:
@@ -1022,7 +1022,7 @@ class Merger():
 
     def batch_enuming(self):
         # filelist = os.listdir('deepline_only_new_'+str(self.running_id))
-        # filelist = os.listdir('deepline_only_new_data')
+        # filelist = os.listdir('deepline_only_tmpdata')
         # notebooks = []
         count = 0
         # for file_ in filelist:
@@ -1050,19 +1050,19 @@ class Merger():
             # if count <= -1:
             #     count += 1
             #     continue
-            # if os.path.exists('merge_code_new_data_1600/'+str(notebook_id)):
+            # if os.path.exists('merge_code_tmpdata_1600/'+str(notebook_id)):
                 # continue
             # if notebook_id !='bilal75210_project-data-science':
                 # continue
             
             # if notebook_id == 'srikanthmalyala_zs-challenge' or notebook_id == 'shreyajune_leads-score-eda-and-simple-regression-tutorial' or notebook_id == 'surya08084_loan-starter-notebook' or notebook_id == 'vijit2911_lead-scoring' or notebook_id == 'roh245_a-statistical-analysis-of-imdb-ratings-of-us-films':
             #     continue
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/HAIPipeGen/new_data/prenotebook_graph/' + notebook_id + '.pkl'): # graph failed
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/HAIPipeGen/tmpdata/prenotebook_graph/' + notebook_id + '.pkl'): # graph failed
                 continue
             # try:
                 # self.enum_adding(notebook_id)
                 # self.cut_by_rule()
-            # if not os.path.exists('HAIPipeGen/new_data/HAIPipeGen/new_data/prenotebook_graph/'+notebook_id+'.pkl'):
+            # if not os.path.exists('HAIPipeGen/tmpdata/HAIPipeGen/tmpdata/prenotebook_graph/'+notebook_id+'.pkl'):
                 # continue
             try:
                 merger.merging_one_notebook(notebook_id)
@@ -1087,7 +1087,7 @@ class Merger():
 
         #print('failed', failed)
 def transform_origin_validation_code(split_random_state=0, running_id=1):
-    # notebooks = os.listdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_code')
+    # notebooks = os.listdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_code')
     # notebooks.sort()
     res = []
     with open('return_cross.json','r') as f:
@@ -1113,11 +1113,11 @@ def transform_origin_validation_code(split_random_state=0, running_id=1):
             # continue
         # if notebook_id != "gabrielfrborges_iris-ds":
         #     continue
-        # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code/'+str(notebook_id)+'/origin.json'):
+        # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code/'+str(notebook_id)+'/origin.json'):
         #     continue
         # if notebook_id == "tphaterp_exploring-gender-differences-in-heart-disease":
         #     continue
-        with open("/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_code/" + notebook_id_py, 'r') as f:
+        with open("/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_code/" + notebook_id_py, 'r') as f:
             test_code = f.read()
         # #print("------------1----------------------------------------")
         # #print(test_code)
@@ -1162,8 +1162,8 @@ def transform_origin_validation_code(split_random_state=0, running_id=1):
                 new_line0 = 'import numpy as np\n'
                 # new_line = 'np.save("'+"merge_result_data/"+str(notebook_id)+"/"+"origin_data_x.npy\"," +x_varible+')\n'
                 # new_line1 = 'np.save("'+"merge_result_data/"+str(notebook_id)+"/"+"origin_data_y.npy\"," +y_varible+')\n'
-                new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+"origin_data_x.npy\"," +x_varible+')\n'
-                new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+"origin_data_y.npy\"," +y_varible+')\n'
+                new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+"origin_data_x.npy\"," +x_varible+')\n'
+                new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+"origin_data_y.npy\"," +y_varible+')\n'
                 # validation_code += new_line0
                 # validation_code += new_line
                 # validation_code += new_line1
@@ -1203,7 +1203,7 @@ def transform_origin_validation_code(split_random_state=0, running_id=1):
                 validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                 validation_code += '\n'
                 validation_code += cross_validation_code
-            elif 'np.save("HAIPipeGen/new_data/prenotebook_res/' in line:
+            elif 'np.save("HAIPipeGen/tmpdata/prenotebook_res/' in line:
                 validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                 validation_code += '\n'
                 validation_code += line.replace('prenotebook_res', 'cross_val_res').replace(': score }', ': cross_score }')
@@ -1236,13 +1236,13 @@ def transform_origin_validation_code(split_random_state=0, running_id=1):
         #     json.dump(seq_code_dict, f)
         # with open('merge_validation_code_py_'+str(running_id)+'/'+notebook_id+'/origin.py', 'w') as f:
         #     f.write(validation_code)
-        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code'+'/'+notebook_id):
-            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code'+'/'+notebook_id)
-        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code_py'+'/'+notebook_id):
-            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code_py'+'/'+notebook_id)
-        with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code'+'/'+notebook_id+'/origin.json', 'w') as f:
+        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code'+'/'+notebook_id):
+            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code'+'/'+notebook_id)
+        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code_py'+'/'+notebook_id):
+            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code_py'+'/'+notebook_id)
+        with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code'+'/'+notebook_id+'/origin.json', 'w') as f:
             json.dump(seq_code_dict, f)
-        with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code_py'+'/'+notebook_id+'/origin.py', 'w') as f:
+        with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code_py'+'/'+notebook_id+'/origin.py', 'w') as f:
             f.write(validation_code)
 
 
@@ -1301,7 +1301,7 @@ def transform_validation_planB():
         seq_files = os.listdir('planB_test_merge_code/'+notebook_id)
         need_continue=False
         for seq_file in seq_files:
-            if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
+            if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
                 continue
             seq_index = seq_file.split('.')[0]
 
@@ -1344,8 +1344,8 @@ def transform_validation_planB():
                     validation_code += line
                     validation_code += '\n'
                     # new_line0 = 'import numpy as np\n'
-                    # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
-                    # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
+                    # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
+                    # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
                     # validation_code += new_line0
                     # validation_code += new_line
                     # validation_code += new_line1
@@ -1385,7 +1385,7 @@ def transform_validation_planB():
                     validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                     validation_code += '\n'
                     validation_code += cross_validation_code
-                elif 'np.save("HAIPipeGen/new_data/prenotebook_res/' in line:
+                elif 'np.save("HAIPipeGen/tmpdata/prenotebook_res/' in line:
                     validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                     validation_code += '\n'
                     validation_code += line.replace('prenotebook_res', 'cross_val_res').replace(': score }', ': cross_score }')
@@ -1396,17 +1396,17 @@ def transform_validation_planB():
             seq_code_dict['validation_code'] = validation_code
             # #print(seq_code_dict)
             #print('????????????????????????')
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code_add3/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code_add3/'+notebook_id)
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code_add3_py/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code_add3_py/'+notebook_id)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code_add3/'+notebook_id+'/'+seq_file, 'w') as f:
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code_add3/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code_add3/'+notebook_id)
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code_add3_py/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code_add3_py/'+notebook_id)
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code_add3/'+notebook_id+'/'+seq_file, 'w') as f:
                 json.dump(seq_code_dict, f)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/planB_cross_validation_code_add3_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/planB_cross_validation_code_add3_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
                 f.write(validation_code)
 
 def transform_validation_rl():
-    notebooks = os.listdir('HAIPipeGen/new_data/rl_test_merge_code/')
+    notebooks = os.listdir('HAIPipeGen/tmpdata/rl_test_merge_code/')
     # notebooks.sort()
     # with open('return_cross.json','r') as f:
     #     notebooks = json.load(f)
@@ -1420,17 +1420,17 @@ def transform_validation_rl():
         #     continue
         if notebook_id == 'tmpfile':
             continue
-        seq_files = os.listdir('HAIPipeGen/new_data/rl_test_merge_code/'+notebook_id)
+        seq_files = os.listdir('HAIPipeGen/tmpdata/rl_test_merge_code/'+notebook_id)
         need_continue=False
         with open("rl_step2_merge_time.json", 'r') as f:
             validation_running_time = json.load(f)
         start_time = time.time()
         for seq_file in seq_files:
-            if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
+            if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
                 continue
             seq_index = seq_file.split('.')[0]
             
-            with open('HAIPipeGen/new_data/rl_test_merge_code/'+notebook_id+'/'+seq_file, 'r') as f:
+            with open('HAIPipeGen/tmpdata/rl_test_merge_code/'+notebook_id+'/'+seq_file, 'r') as f:
                 seq_code_dict = json.load(f)
             test_code = seq_code_dict['code']
             test_code = cleaning_origin(test_code)
@@ -1469,8 +1469,8 @@ def transform_validation_rl():
                     validation_code += line
                     validation_code += '\n'
                     # new_line0 = 'import numpy as np\n'
-                    # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
-                    # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
+                    # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
+                    # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
                     # validation_code += new_line0
                     # validation_code += new_line
                     # validation_code += new_line1
@@ -1510,7 +1510,7 @@ def transform_validation_rl():
                     validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                     validation_code += '\n'
                     validation_code += cross_validation_code
-                elif 'np.save("HAIPipeGen/new_data/prenotebook_res/' in line:
+                elif 'np.save("HAIPipeGen/tmpdata/prenotebook_res/' in line:
                     validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                     validation_code += '\n'
                     validation_code += line.replace('prenotebook_res', 'cross_val_res').replace(': score }', ': cross_score }')
@@ -1521,13 +1521,13 @@ def transform_validation_rl():
             seq_code_dict['validation_code'] = validation_code
             # #print(seq_code_dict)
             # #print('????????????????????????')
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id)
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code_py/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code_py/'+notebook_id)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id+'/'+seq_file, 'w') as f:
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id)
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code_py/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code_py/'+notebook_id)
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id+'/'+seq_file, 'w') as f:
                 json.dump(seq_code_dict, f)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/rl_cross_validation_code_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/rl_cross_validation_code_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
                 f.write(validation_code)
         end = time.time()
         validation_running_time[notebook_id] += end - start_time
@@ -1538,7 +1538,7 @@ def transform_validation_rl():
 
 def transform_validation_code(running_id = 1,split_random_state=0):
 
-    notebook_m = os.listdir('merge_code_new_data_1600')
+    notebook_m = os.listdir('merge_code_tmpdata_1600')
     # notebooks.sort()
     with open('return_cross.json','r') as f:
         notebooks = json.load(f)
@@ -1552,10 +1552,10 @@ def transform_validation_code(running_id = 1,split_random_state=0):
         #     continue
         if notebook_id == 'tmpfile':
             continue
-        seq_files = os.listdir('merge_code_new_data_1600/'+notebook_id)
+        seq_files = os.listdir('merge_code_tmpdata_1600/'+notebook_id)
         need_continue=False
         for seq_file in seq_files:
-            # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
+            # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
             #     continue
             seq_index = seq_file.split('.')[0]
             # #print(notebook_id)
@@ -1566,7 +1566,7 @@ def transform_validation_code(running_id = 1,split_random_state=0):
                 # continue
                 
             # #print(seq_file)
-            with open('merge_code_new_data_1600/'+notebook_id+'/'+seq_file, 'r') as f:
+            with open('merge_code_tmpdata_1600/'+notebook_id+'/'+seq_file, 'r') as f:
                 seq_code_dict = json.load(f)
             test_code = seq_code_dict['code']
             test_code = cleaning_origin(test_code)
@@ -1605,8 +1605,8 @@ def transform_validation_code(running_id = 1,split_random_state=0):
                     validation_code += line
                     validation_code += '\n'
                     new_line0 = 'import numpy as np\n'
-                    new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
-                    new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
+                    new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
+                    new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
                     # validation_code += new_line0
                     # validation_code += new_line
                     # validation_code += new_line1
@@ -1646,7 +1646,7 @@ def transform_validation_code(running_id = 1,split_random_state=0):
                     validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                     validation_code += '\n'
                     validation_code += cross_validation_code
-                elif 'np.save("HAIPipeGen/new_data/prenotebook_res/' in line:
+                elif 'np.save("HAIPipeGen/tmpdata/prenotebook_res/' in line:
                     validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                     validation_code += '\n'
                     validation_code += line.replace('prenotebook_res', 'cross_val_res').replace(': score }', ': cross_score }')
@@ -1657,13 +1657,13 @@ def transform_validation_code(running_id = 1,split_random_state=0):
             seq_code_dict['validation_code'] = validation_code
             # #print(seq_code_dict)
             #print('????????????????????????')
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code/'+notebook_id)
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code_py/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code_py/'+notebook_id)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code/'+notebook_id+'/'+seq_file, 'w') as f:
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code/'+notebook_id)
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code_py/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code_py/'+notebook_id)
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code/'+notebook_id+'/'+seq_file, 'w') as f:
                 json.dump(seq_code_dict, f)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/cross_validation_code_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/cross_validation_code_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
                 f.write(validation_code)
         # break
                         
@@ -1727,7 +1727,7 @@ def clean_kuohao(code):
             str_ += line
     return str_
 def transform_validation_code_new(running_id = 1,split_random_state=0):
-    # notebooks = os.listdir('merge_code_new_data_1600')
+    # notebooks = os.listdir('merge_code_tmpdata_1600')
     # notebooks.sort()
     with open('need_rerun.json','r') as f:
         notebooks = json.load(f)
@@ -1742,12 +1742,12 @@ def transform_validation_code_new(running_id = 1,split_random_state=0):
         if notebook_id == 'tmpfile':
             continue
         try:
-            seq_files = os.listdir('merge_code_new_data_1600/'+notebook_id)
+            seq_files = os.listdir('merge_code_tmpdata_1600/'+notebook_id)
         except:
             continue
         need_continue=False
         for seq_file in seq_files:
-            # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_new/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
+            # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_new/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
                 # continue
             seq_index = seq_file.split('.')[0]
             # #print(notebook_id)
@@ -1757,7 +1757,7 @@ def transform_validation_code_new(running_id = 1,split_random_state=0):
             # if notebook_id not in exitst_:
                 # continue
             # #print(seq_file)
-            with open('merge_code_new_data_1600/'+notebook_id+'/'+seq_file, 'r') as f:
+            with open('merge_code_tmpdata_1600/'+notebook_id+'/'+seq_file, 'r') as f:
                 seq_code_dict = json.load(f)
             test_code = seq_code_dict['code']
             test_code = cleaning_origin(test_code)
@@ -1794,8 +1794,8 @@ def transform_validation_code_new(running_id = 1,split_random_state=0):
                     validation_code += line
                     validation_code += '\n'
                     # new_line0 = 'import numpy as np\n'
-                    # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
-                    # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
+                    # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
+                    # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
                     # validation_code += new_line0
                     # validation_code += new_line
                     # validation_code += new_line1
@@ -1835,16 +1835,16 @@ def transform_validation_code_new(running_id = 1,split_random_state=0):
 
 
             seq_code_dict['validation_code'] = validation_code
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_1/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_1/'+notebook_id)
-            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_py_1/'+notebook_id):
-                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_py_1/'+notebook_id)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_1/'+notebook_id+'/'+seq_file, 'w') as f:
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_1/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_1/'+notebook_id)
+            if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_py_1/'+notebook_id):
+                os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_py_1/'+notebook_id)
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_1/'+notebook_id+'/'+seq_file, 'w') as f:
                 json.dump(seq_code_dict, f)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_py_1/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_py_1/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
                 f.write(validation_code)
 def transform_origin_validation_code_new(split_random_state=0, running_id=1):
-    # notebooks = os.listdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_code')
+    # notebooks = os.listdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_code')
     # notebooks.sort()
     with open('need_rerun.json','r') as f:
         notebooks = json.load(f)
@@ -1865,9 +1865,9 @@ def transform_origin_validation_code_new(split_random_state=0, running_id=1):
         # if notebook_id not in exitst_:
         #     continue
         
-        # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_new/'+str(notebook_id)+'/origin.json'):
+        # if os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_new/'+str(notebook_id)+'/origin.json'):
             # continue
-        with open("/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_code/" + notebook_id_py, 'r') as f:
+        with open("/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_code/" + notebook_id_py, 'r') as f:
             test_code = f.read()
         # #print("------------1----------------------------------------")
         # #print(test_code)
@@ -1909,8 +1909,8 @@ def transform_origin_validation_code_new(split_random_state=0, running_id=1):
                 # new_line0 = 'import numpy as np\n'
                 # new_line = 'np.save("'+"merge_result_data/"+str(notebook_id)+"/"+"origin_data_x.npy\"," +x_varible+')\n'
                 # new_line1 = 'np.save("'+"merge_result_data/"+str(notebook_id)+"/"+"origin_data_y.npy\"," +y_varible+')\n'
-                # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+"origin_data_x.npy\"," +x_varible+')\n'
-                # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+"origin_data_y.npy\"," +y_varible+')\n'
+                # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+"origin_data_x.npy\"," +x_varible+')\n'
+                # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+"origin_data_y.npy\"," +y_varible+')\n'
                 # validation_code += new_line0
                 # validation_code += new_line
                 # validation_code += new_line1
@@ -1974,13 +1974,13 @@ def transform_origin_validation_code_new(split_random_state=0, running_id=1):
         #     json.dump(seq_code_dict, f)
         # with open('merge_validation_code_py_'+str(running_id)+'/'+notebook_id+'/origin.py', 'w') as f:
         #     f.write(validation_code)
-        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_1'+'/'+notebook_id):
-            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_1'+'/'+notebook_id)
-        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_py_1'+'/'+notebook_id):
-            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_py_1'+'/'+notebook_id)
-        with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_1'+'/'+notebook_id+'/origin.json', 'w') as f:
+        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_1'+'/'+notebook_id):
+            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_1'+'/'+notebook_id)
+        if not os.path.exists('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_py_1'+'/'+notebook_id):
+            os.mkdir('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_py_1'+'/'+notebook_id)
+        with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_1'+'/'+notebook_id+'/origin.json', 'w') as f:
             json.dump(seq_code_dict, f)
-        with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_validation_code_py_1'+'/'+notebook_id+'/origin.py', 'w') as f:
+        with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_validation_code_py_1'+'/'+notebook_id+'/origin.py', 'w') as f:
             f.write(validation_code)
 def create_base_code():
     with open('task_all.json','r') as f:
@@ -2006,7 +2006,7 @@ def create_base_code():
             train_test_index = -1
             ours_index = -1
             seq_code_dict = {}
-            with open("/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_code/" + notebook_id_py, 'r') as f:
+            with open("/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_code/" + notebook_id_py, 'r') as f:
                 test_code = f.read()
             test_code = cleaning_origin(test_code)
             test_code_list = test_code.split('\n')
@@ -2116,9 +2116,9 @@ def create_base_code():
                 # if index >= ours_index - 2 and index <= ours_index + 6:
                 #     base_code +=line+'\n'
                 # seq_code_dict['code'] = base_code
-                # with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai'+'/'+task+'.json', 'w') as f:
+                # with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai'+'/'+task+'.json', 'w') as f:
                 #     json.dump(seq_code_dict, f)
-                # with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
+                # with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
                 #     f.write(base_code)
         
         if notebook_id_py in old_path:
@@ -2232,9 +2232,9 @@ def create_base_code():
                 # if index >= ours_index - 7:
                 #     base_code +=line+'\n'
                 # seq_code_dict['code'] = base_code
-                # with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai'+'/'+task+'.json', 'w') as f:
+                # with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai'+'/'+task+'.json', 'w') as f:
                 #     json.dump(seq_code_dict, f)
-                # with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
+                # with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
                 #     f.write(base_code)   
     #print(res)
     #print(len(res))
@@ -2262,7 +2262,7 @@ def create_base_code_all():
             train_test_index = -1
             ours_index = -1
             seq_code_dict = {}
-            with open("/home/yxm/staticfg-master/HAIPipeGen/new_data/prenotebook_code/" + notebook_id_py, 'r') as f:
+            with open("/home/yxm/staticfg-master/HAIPipeGen/tmpdata/prenotebook_code/" + notebook_id_py, 'r') as f:
                 test_code = f.read()
             test_code = cleaning_origin(test_code)
             test_code_list = test_code.split('\n')
@@ -2376,9 +2376,9 @@ def create_base_code_all():
             # if index >= ours_index - 2 and index <= ours_index + 6:
             #     base_code +=line+'\n'
             seq_code_dict['code'] = base_code
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai'+'/'+task+'.json', 'w') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai'+'/'+task+'.json', 'w') as f:
                 json.dump(seq_code_dict, f)
-            with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
+            with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
                 f.write(base_code) 
         # if notebook_id_py in old_path:
         #     seq_code_dict = {}
@@ -2444,22 +2444,22 @@ def create_base_code_all():
         #     base_code += temp_y + '\n'
 
         #     seq_code_dict['code'] = base_code
-        #     with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai'+'/'+task+'.json', 'w') as f:
+        #     with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai'+'/'+task+'.json', 'w') as f:
         #         json.dump(seq_code_dict, f)
-        #     with open('/home/yxm/staticfg-master/HAIPipeGen/new_data/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
+        #     with open('/home/yxm/staticfg-master/HAIPipeGen/tmpdata/base_code_add_ai_py'+'/'+task+'.py', 'w') as f:
         #         f.write(base_code) 
     # #print(res)
     # #print(len(res))
 def transform_one_validation_rl(notebook_id):
-    notebooks = os.listdir('HAIPipeGen/new_data/rl_test_merge_code/')
-    seq_files = os.listdir('HAIPipeGen/new_data/rl_test_merge_code/'+notebook_id)
+    notebooks = os.listdir('HAIPipeGen/tmpdata/rl_test_merge_code/')
+    seq_files = os.listdir('HAIPipeGen/tmpdata/rl_test_merge_code/'+notebook_id)
     start_time = time.time()
     for seq_file in seq_files:
-        if os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
+        if os.path.exists('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id+'/'+seq_file.replace('.json', '.py')):
             continue
         seq_index = seq_file.split('.')[0]
         
-        with open('HAIPipeGen/new_data/rl_test_merge_code/'+notebook_id+'/'+seq_file, 'r') as f:
+        with open('HAIPipeGen/tmpdata/rl_test_merge_code/'+notebook_id+'/'+seq_file, 'r') as f:
             seq_code_dict = json.load(f)
         test_code = seq_code_dict['code']
         test_code = cleaning_origin(test_code)
@@ -2496,8 +2496,8 @@ def transform_one_validation_rl(notebook_id):
                 validation_code += line
                 validation_code += '\n'
                 # new_line0 = 'import numpy as np\n'
-                # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
-                # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/new_data/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
+                # new_line = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_x.npy\"," +x_varible+')\n'
+                # new_line1 = 'np.save("'+"/home/yxm/staticfg-master/HAIPipeGen/tmpdata/merge_result_data/"+str(notebook_id)+"/"+seq_index+"_data_y.npy\"," +y_varible+')\n'
                 # validation_code += new_line0
                 # validation_code += new_line
                 # validation_code += new_line1
@@ -2537,7 +2537,7 @@ def transform_one_validation_rl(notebook_id):
                 validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                 validation_code += '\n'
                 validation_code += cross_validation_code
-            elif 'np.save("HAIPipeGen/new_data/prenotebook_res/' in line:
+            elif 'np.save("HAIPipeGen/tmpdata/prenotebook_res/' in line:
                 validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
                 validation_code += '\n'
                 validation_code += line.replace('prenotebook_res', 'cross_val_res').replace(': score }', ': cross_score }')
@@ -2547,21 +2547,21 @@ def transform_one_validation_rl(notebook_id):
                 validation_code += '\n'
         seq_code_dict['validation_code'] = validation_code
 
-        if not os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id):
-            os.mkdir('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id)
-        if not os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code_py/'+notebook_id):
-            os.mkdir('HAIPipeGen/new_data/rl_cross_validation_code_py/'+notebook_id)
-        with open('HAIPipeGen/new_data/rl_cross_validation_code/'+notebook_id+'/'+seq_file, 'w') as f:
+        if not os.path.exists('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id):
+            os.mkdir('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id)
+        if not os.path.exists('HAIPipeGen/tmpdata/rl_cross_validation_code_py/'+notebook_id):
+            os.mkdir('HAIPipeGen/tmpdata/rl_cross_validation_code_py/'+notebook_id)
+        with open('HAIPipeGen/tmpdata/rl_cross_validation_code/'+notebook_id+'/'+seq_file, 'w') as f:
             json.dump(seq_code_dict, f)
-        with open('HAIPipeGen/new_data/rl_cross_validation_code_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
+        with open('HAIPipeGen/tmpdata/rl_cross_validation_code_py/'+notebook_id+'/'+seq_file.replace('.json', '.py'), 'w') as f:
             f.write(validation_code)
 def transform_one_origin_validation_code(notebook_id):
 
     notebook_id_py = notebook_id +'.py'
-    # if os.path.exists('HAIPipeGen/new_data/merge_validation_code/'+str(notebook_id)+'/origin.json'):
+    # if os.path.exists('HAIPipeGen/tmpdata/merge_validation_code/'+str(notebook_id)+'/origin.json'):
     #     continue
 
-    with open("HAIPipeGen/new_data/prenotebook_code/" + notebook_id_py, 'r') as f:
+    with open("HAIPipeGen/tmpdata/prenotebook_code/" + notebook_id_py, 'r') as f:
         test_code = f.read()
 
     test_code = cleaning_origin(test_code)
@@ -2628,7 +2628,7 @@ def transform_one_origin_validation_code(notebook_id):
             validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
             validation_code += '\n'
             validation_code += cross_validation_code
-        elif 'np.save("HAIPipeGen/new_data/prenotebook_res/' in line:
+        elif 'np.save("HAIPipeGen/tmpdata/prenotebook_res/' in line:
             validation_code += '#'+line.replace(y_test_varible, y_validation_varible)
             validation_code += '\n'
             validation_code += line.replace('prenotebook_res', 'cross_val_res').replace(': score }', ': cross_score }')
@@ -2639,27 +2639,15 @@ def transform_one_origin_validation_code(notebook_id):
 
     seq_code_dict['validation_code'] = validation_code
     notebook_id= str(notebook_id)
-    if not os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code'+'/'+notebook_id):
-        os.mkdir('HAIPipeGen/new_data/rl_cross_validation_code'+'/'+notebook_id)
-    if not os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code_py'+'/'+notebook_id):
-        os.mkdir('HAIPipeGen/new_data/rl_cross_validation_code_py'+'/'+notebook_id)
-    with open('HAIPipeGen/new_data/rl_cross_validation_code'+'/'+notebook_id+'/origin.json', 'w') as f:
+    if not os.path.exists('HAIPipeGen/tmpdata/rl_cross_validation_code'+'/'+notebook_id):
+        os.mkdir('HAIPipeGen/tmpdata/rl_cross_validation_code'+'/'+notebook_id)
+    if not os.path.exists('HAIPipeGen/tmpdata/rl_cross_validation_code_py'+'/'+notebook_id):
+        os.mkdir('HAIPipeGen/tmpdata/rl_cross_validation_code_py'+'/'+notebook_id)
+    with open('HAIPipeGen/tmpdata/rl_cross_validation_code'+'/'+notebook_id+'/origin.json', 'w') as f:
         json.dump(seq_code_dict, f)
-    with open('HAIPipeGen/new_data/rl_cross_validation_code_py'+'/'+notebook_id+'/origin.py', 'w') as f:
+    with open('HAIPipeGen/tmpdata/rl_cross_validation_code_py'+'/'+notebook_id+'/origin.py', 'w') as f:
         f.write(validation_code)
-def merge_one_code(notebook_id):
-    if not os.path.exists('HAIPipeGen/new_data/rl_test_merge_code'):
-        os.mkdir('HAIPipeGen/new_data/rl_test_merge_code')
-    if not os.path.exists('HAIPipeGen/new_data/rl_test_merge_code_py'):
-        os.mkdir('HAIPipeGen/new_data/rl_test_merge_code_py')
-    if not os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code'):
-        os.mkdir('HAIPipeGen/new_data/rl_cross_validation_code')
-    if not os.path.exists('HAIPipeGen/new_data/rl_cross_validation_code_py'):
-        os.mkdir('HAIPipeGen/new_data/rl_cross_validation_code_py')
-    merger = Merger(4)
-    merger.merging_one_notebook_rl(notebook_id)
-    transform_one_validation_rl(notebook_id)
-    transform_one_origin_validation_code(notebook_id)
+
 if __name__ == "__main__":
     merger = Merger(4)
     # merger.batch_enuming_planb()
