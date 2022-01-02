@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File ".\example.py", line 11, in <module>
+    generate_one_hai('datascientist25_gender-recognition-by-voice-using-machine-learning')
+  File ".\example.py", line 4, in generate_one_hai
+    HybridPipe = HybridPipe(notebook_id)
+UnboundLocalError: local variable 'HybridPipe' referenced before assignment
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of HybridPipe: 0.9857723577235772
