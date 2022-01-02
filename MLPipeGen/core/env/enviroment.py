@@ -1,6 +1,6 @@
 from .pipeline import Pipeline
 import random
-from config import Config
+from MLPipeGen.core.config import Config
 import numpy as np
 import pandas as pd
 

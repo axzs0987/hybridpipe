@@ -1,12 +1,12 @@
 import math
 from copy import deepcopy
 import numpy as np
-from config import Config
-from core.logger import TensorBoardLogger
-from core.util import get_output_folder
+from MLPipeGen.core.config import Config
+from MLPipeGen.core.logger import TensorBoardLogger
+from MLPipeGen.core.util import get_output_folder
 import os
-from env.primitives.primitive import Primitive
-from env.primitives.imputercat import ImputerCatPrim
+from MLPipeGen.core.env.primitives.primitive import Primitive
+from MLPipeGen.core.env.primitives.imputercat import ImputerCatPrim
 import time
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
@@ -276,8 +276,8 @@ class Tester:
         # print(self.config.classification_task_dic['0'])
             # self.agent.test_load_weights(self.outputdir, self.dpgoutputdir, number=31000)
         datasetname = data_path.split("/")[-2]
-        for taskid in self.config.classifier_predictor_list:
-            if datasetname == self.config.classifier_predictor_list[taskid]['dataset']:
+        for taskid in self.config.classification_task_dic:
+            if datasetname == self.config.classification_task_dic[taskid]['dataset']:
                 i = taskid
         seq = []
         select_cl = 0

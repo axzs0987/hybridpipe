@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 from .primitives.predictor import *
-from config import Config
+from MLPipeGen.core.config import Config
 
 class Pipeline:
     def __init__(self, taskid, predictor, metric, config: Config, train=True):

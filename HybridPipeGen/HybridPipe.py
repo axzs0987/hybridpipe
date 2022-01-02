@@ -10,7 +10,8 @@ import shutil
 
 class HybridPipe:
     def __init__(self, notebook_path, data_path, label_index, model):
-        notebook_id = notebook_path.split('/')[-1][:-3]
+        notebook_id = notebook_path.split('/')[-1].split('.')[0]
+        # print(notebook_id)
         self.notebook_id = notebook_id
         self.data_path = data_path
         self.label_index = label_index
@@ -21,6 +22,28 @@ class HybridPipe:
         info_triple = np.load('HybridPipeGen/core/merged_info_triple.npy',allow_pickle=True).item()
         with open("HybridPipeGen/core/merged_dataset_label.json",'r') as f:
             merged_dataset_label = json.load(f)
+        with open("MLPipeGen/core/jsons/classification_task_dic.json",'r') as f:
+            classification_task_dic = json.load(f)
+        with open("MLPipeGen/core/jsons/test_index.json",'r') as f:
+            test_index = json.load(f)
+        task_id = str(len(classification_task_dic))
+        test_index.append(task_id)
+        task_name = self.data_path.split('/')[-2]+'_'+self.model+'_'+str(self.label_index)
+        exist_task = False
+        for task in classification_task_dic:
+            if task_name == classification_task_dic[task]['task_name']:
+                exist_task = True
+                break
+        if not exist_task:
+            classification_task_dic[task_id] = {}
+            classification_task_dic[task_id]['dataset'] = self.data_path.split('/')[-2]
+            classification_task_dic[task_id]['csv_file'] = self.data_path.split('/')[-1]
+            classification_task_dic[task_id]['label'] = str(self.label_index)
+            classification_task_dic[task_id]['model'] = self.model
+            classification_task_dic[task_id]['task_name'] = task_name
+            
+        with open("MLPipeGen/core/jsons/classification_task_dic.json",'w') as f:
+            json.dump(classification_task_dic, f)    
         if self.notebook_id not in info_triple:
             info_triple[self.notebook_id] = {}
             info_triple[self.notebook_id]['dataset_name'] = self.data_path
@@ -40,6 +63,10 @@ class HybridPipe:
         np.save('HybridPipeGen/core/merged_info_triple.npy', info_triple)
         with open("HybridPipeGen/core/merged_dataset_label.json",'w') as f:
             json.dump(merged_dataset_label, f)
+        with open("MLPipeGen/core/jsons/classification_task_dic.json",'w') as f:
+            json.dump(classification_task_dic, f)
+        with open("MLPipeGen/core/jsons/test_index.json",'w') as f:
+            json.dump(test_index, f)
 
     def combine(self):
         profile_hipipe(self.notebook_id)
@@ -82,7 +109,7 @@ class HybridPipe:
 
     def evalaute_hybrid(self):
         run_one_validation_rl(self.notebook_id)
-        self.max_index()
+        self.select_best_hybrid()
         run_one_max_hybrid(self.notebook_id)
 
     def select_best_hybrid(self):

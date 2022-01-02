@@ -5,10 +5,10 @@ import torch
 from torch.optim import Adam
 # from tester import Tester
 from .buffer import ReplayBuffer
-from config import Config
-from core.util import get_class_attr_val
+from MLPipeGen.core.config import Config
+from MLPipeGen.core.util import get_class_attr_val
 from .model import DQN, RnnDQN
-from trainer import Trainer
+from MLPipeGen.core.trainer import Trainer
 import warnings
 import numpy as np
 import os

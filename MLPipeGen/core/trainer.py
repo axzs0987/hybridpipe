@@ -1,13 +1,13 @@
 import math
 from copy import deepcopy
 import numpy as np
-from config import Config
-from core.util import get_output_folder
+from MLPipeGen.core.config import Config
+from MLPipeGen.core.util import get_output_folder
 import os
-from env.primitives.primitive import Primitive
-from env.primitives.imputercat import ImputerCatPrim
-from tester import Tester
-from env.enviroment import Environment
+from MLPipeGen.core.env.primitives.primitive import Primitive
+from MLPipeGen.core.env.primitives.imputercat import ImputerCatPrim
+from MLPipeGen.core.tester import Tester
+from MLPipeGen.core.env.enviroment import Environment
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 class Trainer:

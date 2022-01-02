@@ -1,11 +1,11 @@
 
-from env.primitives.encoder import *
-from env.primitives.fengine import *
-from env.primitives.fpreprocessing import *
-from env.primitives.fselection import *
-from env.primitives.imputernum import *
-from env.primitives.predictor import *
-from env.metric import *
+from MLPipeGen.core.env.primitives.encoder import *
+from MLPipeGen.core.env.primitives.fengine import *
+from MLPipeGen.core.env.primitives.fpreprocessing import *
+from MLPipeGen.core.env.primitives.fselection import *
+from MLPipeGen.core.env.primitives.imputernum import *
+from MLPipeGen.core.env.primitives.predictor import *
+from MLPipeGen.core.env.metric import *
 import json
 import math
 import os
@@ -26,7 +26,7 @@ class Config:
     column_num: int = 100
     column_feature_dim: int = 19
     # dataset_path : str = '/home/datamanager/dataset/fixline/'
-    dataset_path : str = 'datasets/'
+    dataset_path : str = 'data/dataset/'
 
     epsilon: float = 1
     eps_decay: float = 500
@@ -79,12 +79,12 @@ class Config:
     regression_metric_id: int = 4
 
     k_fold = 3
-    with open('jsons/classification_task_dic.json', 'r') as f:
+    with open('MLPipeGen/core/jsons/classification_task_dic.json', 'r') as f:
         classification_task_dic = json.load(f)
     
     train_classification_task_dic = {}
     fold_length = math.ceil(len(classification_task_dic)/k_fold)
-    with open('jsons/test_index.json','r') as f:
+    with open('MLPipeGen/core/jsons/test_index.json','r') as f:
         test_index = json.load(f)
     # test_index = [str(i) for i in range(version*k_fold, min(version*k_fold + fold_length, len(classification_task_dic)))]
     train_index = list(set(classification_task_dic.keys())-set(test_index))
@@ -206,27 +206,27 @@ class Config:
     classifier_predictor_list = [
         # LogisticRegressionPrim(),
         RandomForestClassifierPrim(),
-        # AdaBoostClassifierPrim(),
-        # BaggingClassifierPrim(),
-        # BernoulliNBClassifierPrim(),
+        AdaBoostClassifierPrim(),
+        BaggingClassifierPrim(),
+        BernoulliNBClassifierPrim(),
         # ComplementNBClassifierPrim(),
         DecisionTreeClassifierPrim(),
-        # ExtraTreesClassifierPrim(),
-        # GaussianNBClassifierPrim(),
-        # GaussianProcessClassifierPrim(),
-        # GradientBoostingClassifierPrim(),
+        ExtraTreesClassifierPrim(),
+        GaussianNBClassifierPrim(),
+        GaussianProcessClassifierPrim(),
+        GradientBoostingClassifierPrim(),
         KNeighborsClassifierPrim(),
-        # LinearDiscriminantAnalysisPrim(),
-        # LinearSVCPrim(),
+        LinearDiscriminantAnalysisPrim(),
+        LinearSVCPrim(),
         LogisticRegressionPrim(),
         # LogisticRegressionCVPrim(),
         # MultinomialNBPrim(),
-        # NearestCentroidPrim(),
-        # PassiveAggressiveClassifierPrim(),
+        NearestCentroidPrim(),
+        PassiveAggressiveClassifierPrim(),
         # QuadraticDiscriminantAnalysisPrim(),
-        # RidgeClassifierPrim(),
-        # RidgeClassifierCVPrim(),
-        # SGDClassifierPrim(),
+        RidgeClassifierPrim(),
+        RidgeClassifierCVPrim(),
+        SGDClassifierPrim(),
         SVCPrim(),
         # XGBClassifierPrim(),
         # BalancedRandomForestClassifierPrim(),
@@ -300,15 +300,15 @@ class Config:
     # dpgoutputdir: str = './dpg_v' + str(version)
     # outputdir1: str = './train_tanh_v' + str(version)
 
-    if not os.path.exists('logs/'+str(version)+'_more_model'):
-        os.mkdir('logs/'+str(version)+'_more_model')
-    if not os.path.exists('models/'+str(version)+'_more_model'):
-        os.mkdir('models/'+str(version)+'_more_model')
-    result_log_file_name: str = 'logs/'+str(version)+'_more_model'+'/result_log.npy'
-    loss_log_file_name: str = 'logs/'+str(version)+'_more_model'+'/loss_log.npy'
-    lp_loss_log_file_name: str = 'logs/'+str(version)+'_more_model'+'/lp_loss_log.npy'
-    test_reward_dic_file_name: str = 'logs/'+str(version)+'_more_model'+'/test_reward_dict.npy'
-    model_dir: str = 'models/'+str(version)
+    if not os.path.exists('MLPipeGen/core/logs/'+str(version)+'_more_model'):
+        os.mkdir('MLPipeGen/core/logs/'+str(version)+'_more_model')
+    if not os.path.exists('MLPipeGen/core/models/'+str(version)+'_more_model'):
+        os.mkdir('MLPipeGen/core/models/'+str(version)+'_more_model')
+    result_log_file_name: str = 'MLPipeGen/core/logs/'+str(version)+'_more_model'+'/result_log.npy'
+    loss_log_file_name: str = 'MLPipeGen/core/logs/'+str(version)+'_more_model'+'/loss_log.npy'
+    lp_loss_log_file_name: str = 'MLPipeGen/core/logs/'+str(version)+'_more_model'+'/lp_loss_log.npy'
+    test_reward_dic_file_name: str = 'MLPipeGen/core/logs/'+str(version)+'_more_model'+'/test_reward_dict.npy'
+    model_dir: str = 'MLPipeGen/core/models/'+str(version)
 
     single_result_log_file_name: str = 'single_result_log_tanh_v'+ str(version) +'.npy'
     single_loss_log_file_name: str = 'single_loss_log_tanh_v'+ str(version) +'.npy'

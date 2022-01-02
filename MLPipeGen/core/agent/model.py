@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from config import Config
+from MLPipeGen.core.config import Config
 
 class DQN(nn.Module):
     def __init__(self, num_inputs, actions_dim):

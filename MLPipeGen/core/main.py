@@ -1,8 +1,8 @@
-from trainer import Trainer
-from tester import Tester
-from agent.dqn import DQNAgent
-from env.enviroment import Environment
-from config import Config
+from MLPipeGen.core.trainer import Trainer
+from MLPipeGen.core.tester import Tester
+from MLPipeGen.core.agent.dqn import DQNAgent
+from MLPipeGen.core.env.enviroment import Environment
+from MLPipeGen.core.config import Config
 import json
 
 if __name__ == '__main__':
