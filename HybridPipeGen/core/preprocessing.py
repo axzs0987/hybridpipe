@@ -1324,7 +1324,11 @@ def run_notebook_path(path, replace_code, test, running_id=None, force_rerun=Fal
     # #print("--------------------4-------------------------")
     code = pro.run_one_code(notebook_id, new_c, dataset_root_path + pro.info_triple[notebook_id]['dataset_name'], 0)
 
+<<<<<<< HEAD
 def run_max_hybrid():
+=======
+def run_max_hai():
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     res = []
     if os.path.exists("rl_step2_test_time.json"):
         with open("rl_step2_test_time.json", 'r') as f:
@@ -1369,7 +1373,11 @@ def run_max_hybrid():
     #print(len(res))
     #print(res)
 
+<<<<<<< HEAD
 def run_max_hybrid_add3():
+=======
+def run_max_hai_add3():
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     res = []
     with open('planB_cross_max_index_add3_222.json','r',encoding='utf8')as fp:
         json_data = json.load(fp)
@@ -1747,14 +1755,23 @@ def final_test_hi():
             continue
         run_notebook_path('transdata/this_prenotebook_code/'+notebook_id_py, replace_code = 'final_hi_res/',test=False)
 
+<<<<<<< HEAD
 def final_planB_hybrid():
+=======
+def final_planB_hai():
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     res = []
     run_code_filelist = os.listdir('transdata/this_planB_test_merge_code_max/')
     origin_notebooks = []
     for notebook_id in run_code_filelist:
         seq_list = os.listdir('transdata/this_planB_test_merge_code_max/' + notebook_id)
+<<<<<<< HEAD
         if not os.path.exists('HybridPipeGen/core/tmpdata/final_planB_hybrid'):
             os.mkdir('HybridPipeGen/core/tmpdata/final_planB_hybrid')
+=======
+        if not os.path.exists('HybridPipeGen/core/tmpdata/final_planB_hai'):
+            os.mkdir('HybridPipeGen/core/tmpdata/final_planB_hai')
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
         if notebook_id != 'kaggledroid_predicting-heart-disease-using-ensemble':
             continue
         if len(seq_list) == 0:
@@ -1764,6 +1781,7 @@ def final_planB_hybrid():
         
         seq_id = seq_list[0].split('.')[0]
         #print('notebook_id', notebook_id)
+<<<<<<< HEAD
         if os.path.exists('HybridPipeGen/core/tmpdata/final_planB_hybrid/'+notebook_id + '/' + seq_id + '.npy'):
             continue
         run_path_1('transdata/this_planB_test_merge_code_max/'+notebook_id + '/' + seq_id + '.json', replace_code = 'final_planB_hybrid/',test=False)
@@ -1771,22 +1789,42 @@ def final_planB_hybrid():
         # json.dump(origin_notebooks, f)
 
 def final_rl_hybrid():
+=======
+        if os.path.exists('HybridPipeGen/core/tmpdata/final_planB_hai/'+notebook_id + '/' + seq_id + '.npy'):
+            continue
+        run_path_1('transdata/this_planB_test_merge_code_max/'+notebook_id + '/' + seq_id + '.json', replace_code = 'final_planB_hai/',test=False)
+    # with open('origin_planB_notebooks.json','w') as f:
+        # json.dump(origin_notebooks, f)
+
+def final_rl_hai():
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     res = []
     run_code_filelist = os.listdir('transdata/this_rl_test_merge_code_max/')
     origin_notebooks = []
     for notebook_id in run_code_filelist:
         seq_list = os.listdir('transdata/this_rl_test_merge_code_max/' + notebook_id)
+<<<<<<< HEAD
         if not os.path.exists('HybridPipeGen/core/tmpdata/final_rl_hybrid'):
             os.mkdir('HybridPipeGen/core/tmpdata/final_rl_hybrid')
+=======
+        if not os.path.exists('HybridPipeGen/core/tmpdata/final_rl_hai'):
+            os.mkdir('HybridPipeGen/core/tmpdata/final_rl_hai')
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
         if len(seq_list) == 0:
             origin_notebooks.append(notebook_id)
             # print
             continue
         seq_id = seq_list[0].split('.')[0]
         #print('notebook_id', notebook_id)
+<<<<<<< HEAD
         if os.path.exists('HybridPipeGen/core/tmpdata/final_rl_hybrid/'+notebook_id + '/' + seq_id + '.npy'):
             continue
         run_path_1('transdata/this_rl_test_merge_code_max/'+notebook_id + '/' + seq_id + '.json', replace_code = 'final_rl_hybrid/',test=False)
+=======
+        if os.path.exists('HybridPipeGen/core/tmpdata/final_rl_hai/'+notebook_id + '/' + seq_id + '.npy'):
+            continue
+        run_path_1('transdata/this_rl_test_merge_code_max/'+notebook_id + '/' + seq_id + '.json', replace_code = 'final_rl_hai/',test=False)
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     # with open('origin_rl_notebooks.json','w') as f:
         # json.dump(origin_notebooks, f)
 
@@ -1808,7 +1846,11 @@ def run_one_validation_rl(notebook_id):
         except:
             print('其他错误')
         gc.collect()
+<<<<<<< HEAD
 def run_one_max_hybrid(notebook_id):
+=======
+def run_one_max_hai(notebook_id):
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     res = []
     with open('HybridPipeGen/core/tmpdata/max_index.json','r',encoding='utf8')as fp:
         json_data = json.load(fp)
@@ -1852,12 +1894,22 @@ def run_one_max_hybrid(notebook_id):
     # # run_validation_new()
     #run_origin_validation()
     # #print(pro.train_test_split_no_label)
+<<<<<<< HEAD
     # run_max_hybrid_add3()
     # run_max_hybrid()
+=======
+    # run_max_hai_add3()
+    # run_max_hai()
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     # run_base()
     # run_notebook_only()
     # def change_train_test_split(self, ):
     #     4133598.npy 3489576.npy 3900293.npy rerun
     # final_test_hi()
+<<<<<<< HEAD
     # final_planB_hybrid()
     # final_rl_hybrid()
+=======
+    # final_planB_hai()
+    # final_rl_hai()
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7

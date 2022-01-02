@@ -129,6 +129,7 @@ class Merger():
         self.can_add_operaiton = []
         for ope_type in OperationType:
             self.can_add_operaiton += OperationType[ope_type]
+<<<<<<< HEAD
         ops = []
         for ope in self.operations:
             if ope in self.can_add_operaiton:
@@ -147,6 +148,21 @@ class Merger():
         # #         if nid == notebook_id:
         # #             found_task = task
         # self.operations = firefly_seq[found_task]
+=======
+        # with open("clean_task_rl_200.json",'r') as f:
+        #     clean_task = json.load(f)
+        with open("HybridPipeGen/core/firefly_seq_56000.json",'r') as f:
+            firefly_seq = json.load(f)
+        with open("HybridPipeGen/core/merged_dataset_label.json",'r') as f:
+            dataset_label = json.load(f)
+        info_triple = np.load('HybridPipeGen/core/merged_info_triple.npy', allow_pickle=True).item()
+        found_task = dataset_label[notebook_id]['dataset']+'_'+info_triple[notebook_id]['model_type']+'_'+str(dataset_label[notebook_id]['index'][0])
+        # for task in clean_task:
+        #     for nid in clean_task[task]['notebook_list']:
+        #         if nid == notebook_id:
+        #             found_task = task
+        self.operations = firefly_seq[found_task]
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
     def load_graph(self, notebook_id):     
         if os.path.exists('HybridPipeGen/core/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl"):
             filepath = 'HybridPipeGen/core/tmpdata/prenotebook_graph/'+str(notebook_id)+".pkl"
@@ -274,7 +290,10 @@ class Merger():
         # res = self.load_rl_operations(notebook_id)
         
         res = self.load_one_rl_operation(notebook_id)
+<<<<<<< HEAD
         
+=======
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
         # #print('len(self.operations)', len(self.operations))
         self.need_add_edge_id = []
         added_sorted_id = []
@@ -792,8 +811,12 @@ class Merger():
                 f.write(self.code)
             seq_id += 1
 
+<<<<<<< HEAD
     def merging_one_notebook_rl(self,notebook_id, ai_sequence):
         self.operations = ai_sequence
+=======
+    def merging_one_notebook_rl(self,notebook_id):
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
         res = self.enum_adding_rl(notebook_id)
         self.cut_by_rule()
         self.load_graph(notebook_id)
@@ -929,7 +952,11 @@ class Merger():
         for notebook_id in notebooks:
             # if os.path.exists('planB_test_merge_code'+'/'+str(notebook_id)):
                 # continue
+<<<<<<< HEAD
             # if notebook_id != 'rishighybrid97_linear-svm-classification':
+=======
+            # if notebook_id != 'rishighai97_linear-svm-classification':
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
                 # continue
             #print('notebook_id', notebook_id)
             count += 1
@@ -988,7 +1015,11 @@ class Merger():
         for notebook_id in notebooks:
             # if os.path.exists('planB_test_merge_code'+'/'+str(notebook_id)):
                 # continue
+<<<<<<< HEAD
             # if notebook_id != 'rishighybrid97_linear-svm-classification':
+=======
+            # if notebook_id != 'rishighai97_linear-svm-classification':
+>>>>>>> 667bbf9cb98902e69354ddf34ecd5389817d14f7
                 # continue
             #print('notebook_id', notebook_id)
             count += 1
