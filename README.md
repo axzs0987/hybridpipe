@@ -12,7 +12,7 @@ This code is written in Python. Requirements include
 - torch = 1.9.0
 - scikit-learn = 0.23.2
 
-# Quick Start
+## Quick Start
 
 #### run example to generate hybrid-pipeline
 
