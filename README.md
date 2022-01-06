@@ -31,7 +31,7 @@ python example.py
 The file `example.py` is an example. Modify it according to your configuration.
 
 - The **input** contains 1 notebook, 1 csv file, some information about the ML task (including model and label_index)
-- The **output** is  the accuracy of HI-Pipe and the accuracy of Hybrid-Pipe, the hybrid program.
+- The **output** is the best hybrid program,the accuracy of HI-Pipe and the accuracy of Hybrid-Pipe.
 
 #### Customized input
 
