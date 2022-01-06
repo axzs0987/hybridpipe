@@ -12,7 +12,7 @@ This code is written in Python. Requirements include
 - torch = 1.9.0
 - scikit-learn = 0.23.2
 
-You can install multiple packages in conda:
+You can install multiple packages:
 
 ```
 pip install -r requirements.txt
