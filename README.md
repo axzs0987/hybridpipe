@@ -15,7 +15,7 @@ This code is written in Python. Requirements include
 You can install multiple packages in conda:
 
 ```
-conda install --yes --file requirements.txt
+pip install -r requirements.txt
 ```
 
 
