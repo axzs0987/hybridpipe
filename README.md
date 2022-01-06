@@ -31,8 +31,7 @@ python example.py
 The file `example.py` is an example. Modify it according to your configuration.
 
 - The **input** contains 1 notebook, 1 csv file, some information about the ML task (including model and label_index)
-- The **output** is  the accuracy of HI-Pipe and the accuracy of Hybrid-Pipe, the hybrid program, and the data prep pipeline of the input notebook(Optional).
-  The data prep pipeline will be saved at `$hybridpipe_HOME/HybridPipeGen/core/profiling_result/example.png`.
+- The **output** is  the accuracy of HI-Pipe and the accuracy of Hybrid-Pipe, the hybrid program.
 
 #### Customized input
 

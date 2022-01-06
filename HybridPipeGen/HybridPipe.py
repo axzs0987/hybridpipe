@@ -101,16 +101,19 @@ class HybridPipe:
         res = pro.profiling_code(self.notebook_id, need_remove_model=1)
         add_faile = 0
         #print('save_code', res)
-        
+        print("\033[0;33;40mstart run HIPipe on test dataset:\033[0m")
         if res == True:
             pro.run_origin_test(self.notebook_id, need_try_again=2)
         else:
             add_faile += 1
+        print('\n')
 
     def evalaute_hybrid(self):
         run_one_validation_rl(self.notebook_id)
+        print('\n')
         self.select_best_hybrid()
         run_one_max_hybrid(self.notebook_id)
+        print('\n')
 
     def select_best_hybrid(self):
         max_index ={}
@@ -139,7 +142,7 @@ class HybridPipe:
             shutil.copyfile('copy HybridPipeGen/core/tmpdata/prenotebook_code/'+self.notebook_id +'.py', hybrid_name)
         print('notebook:',self.notebook_id)
         print('accuracy of HIPipe:',hi_score['accuracy_score'])
-        print('accuracy of HybridPipe:',hybrid_score['accuracy_score'])
+        print('accuracy of best HybridPipe',note_test_path[0].split('.npy')[0],':',hybrid_score['accuracy_score'])
         # if save_fig == False:
         shutil.rmtree('HybridPipeGen/core/tmpdata/')
         os.mkdir('HybridPipeGen/core/tmpdata/')

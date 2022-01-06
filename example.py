@@ -11,6 +11,6 @@ def generate_one_hybrid(notebook_path, dataset_path, label_index, model, hybridp
 if __name__ == "__main__":
     notebook_path = 'data/notebook/datascientist25_gender-recognition-by-voice-using-machine-learning.ipynb'
     dataset_path = 'data/dataset/primaryobjects_voicegender/voice.csv'
-    label_index = 12
+    label_index = 20
     support_model = ['RandomForestClassifier', 'KNeighborsClassifier', 'LogisticRegression', 'SVC']
     generate_one_hybrid(notebook_path, dataset_path, label_index, support_model[2])

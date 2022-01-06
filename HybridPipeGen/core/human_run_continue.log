@@ -4029,3 +4029,329 @@ Name: label, dtype: int64
 notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
 accuracy of HIPipe: 0.9186991869918699
 accuracy of HybridPipe: 0.9857723577235772
+Traceback (most recent call last):
+  File ".\example.py", line 16, in <module>
+    generate_one_hybrid(notebook_path, dataset_path, label_index, support_model[2])
+  File ".\example.py", line 5, in generate_one_hybrid
+    hybrid_pipe.evaluate_hi()
+  File "E:\hybridpipe\HybridPipeGen\HybridPipe.py", line 94, in evaluate_hi
+    os.mkdir('HybridPipeGen/core/tmpdata/prenotebook_code')
+FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'HybridPipeGen/core/tmpdata/prenotebook_code'
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of HybridPipe: 0.9857723577235772
+Traceback (most recent call last):
+  File ".\example.py", line 16, in <module>
+    generate_one_hybrid(notebook_path, dataset_path, label_index, support_model[2])
+  File ".\example.py", line 8, in generate_one_hybrid
+    hybrid_pipe.evalaute_hybrid()
+  File "E:\hybridpipe\HybridPipeGen\HybridPipe.py", line 111, in evalaute_hybrid
+    run_one_validation_rl(self.notebook_id)
+  File "E:\hybridpipe\HybridPipeGen\core\preprocessing.py", line 1802, in run_one_validation_rl
+    print("candidate:", item.spit('.json')[0])
+AttributeError: 'str' object has no attribute 'spit'
+start run hi-pipeline:
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+start run candidate hybrid-pipe on validation set:
+start run hi-pipeline:
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+start run candidate hybrid-pipe on validation set:
+candidate: 0
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: 1
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: 2
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: origin
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+run selected hybrid-pipe 0 on test dataset:
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of HybridPipe: 0.9857723577235772
+start run HybridPipe on test dataset:
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+start run candidate HybridPipe on validation dataset:
+candidate: 0
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: 1
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: 2
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: origin
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+start run selected HybridPipe 0 on test dataset:
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of HybridPipe 0 : 0.9857723577235772
+start run HybridPipe on test dataset:
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+start run candidate HybridPipe on validation dataset:
+candidate: 0
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: 1
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: 2
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+candidate: origin
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+start run selected HybridPipe 0 on test dataset:
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of HybridPipe 0 : 0.9857723577235772
+Traceback (most recent call last):
+  File ".\example.py", line 16, in <module>
+    generate_one_hybrid(notebook_path, dataset_path, label_index, support_model[2])
+  File ".\example.py", line 8, in generate_one_hybrid
+    hybrid_pipe.evalaute_hybrid()
+  File "E:\hybridpipe\HybridPipeGen\HybridPipe.py", line 115, in evalaute_hybrid
+    run_one_max_hybrid(self.notebook_id)
+  File "E:\hybridpipe\HybridPipeGen\core\preprocessing.py", line 1830, in run_one_max_hybrid
+    print("\033[0;33;40m"+str_run_max+"\033[0m")
+TypeError: can only concatenate str (not "tuple") to str
+[0;33;40mstart run HybridPipe on test dataset:[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;33;40mstart run candidate HybridPipe on validation dataset:[0m
+[0;34;40mcandidate HybridPipe: 0[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+[0;34;40mcandidate HybridPipe: 1[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+[0;34;40mcandidate HybridPipe: 2[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+[0;34;40mcandidate HybridPipe: origin[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;33;40mstart run HybridPipe on test dataset:[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+[0;33;40mstart run candidate HybridPipe on validation dataset:[0m
+[0;34;40mcandidate HybridPipe: 0[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+[0;34;40mcandidate HybridPipe: 1[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+[0;34;40mcandidate HybridPipe: 2[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+[0;34;40mcandidate HybridPipe: origin[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+[0;33;40mstart run selected best HybridPipe0on test dataset:[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of best HybridPipe 0 : 0.9857723577235772
+[0;33;40mstart run HybridPipe on test dataset:[0m
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+[0;33;40mstart run candidate HybridPipe on validation dataset:[0m
+[0;34;40mcandidate HybridPipe: 0[0m
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;34;40mcandidate HybridPipe: 1[0m
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;34;40mcandidate HybridPipe: 2[0m
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;34;40mcandidate HybridPipe: origin[0m
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+[0;33;40mstart run selected best HybridPipe0on test dataset:[0m
+female    1584
+male      1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of best HybridPipe 0 : 0.9857723577235772
+[0;33;40mstart run HIPipe on test dataset:[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+[0;33;40mstart run candidate HybridPipe on validation dataset:[0m
+[0;34;40mcandidate HybridPipe: 0[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;34;40mcandidate HybridPipe: 1[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;34;40mcandidate HybridPipe: 2[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+[0;34;40mcandidate HybridPipe: origin[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+[0;33;40mstart run selected best HybridPipe 0 on test dataset:[0m
+male      1584
+female    1584
+Name: label, dtype: int64
+[0;32;40msucceed[0m
+
+
+notebook: datascientist25_gender-recognition-by-voice-using-machine-learning
+accuracy of HIPipe: 0.9186991869918699
+accuracy of best HybridPipe 0 : 0.9857723577235772

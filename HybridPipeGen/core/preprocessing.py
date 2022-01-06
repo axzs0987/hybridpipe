@@ -1795,10 +1795,11 @@ def run_one_validation_rl(notebook_id):
     filelist = os.listdir('HybridPipeGen/core/tmpdata/rl_cross_validation_code/'+notebook_id)
     if not os.path.exists('HybridPipeGen/core/tmpdata/rl_cross_val_res'):
         os.mkdir('HybridPipeGen/core/tmpdata/rl_cross_val_res')
-    for item in filelist:
+    print("\033[0;33;40mstart run candidate HybridPipe on validation dataset:\033[0m")
+    for index,item in enumerate(filelist):
         # if os.path.exists("HybridPipeGen/core/tmpdata/rl_cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
         #     continue
-        #print("item,", item)
+        print("\033[0;34;40m"+"candidate HybridPipe: "+str(item.split('.json')[0])+"\033[0m")
         #print("notebook,",notebook_id)
         start_time = time.time()
         seq_id = item.split('.json')[0]
@@ -1809,6 +1810,8 @@ def run_one_validation_rl(notebook_id):
         except:
             print('其他错误')
         gc.collect()
+        if index != len(filelist)-1:
+            print('')
 def run_one_max_hybrid(notebook_id):
     res = []
     with open('HybridPipeGen/core/tmpdata/max_index.json','r',encoding='utf8')as fp:
@@ -1825,6 +1828,8 @@ def run_one_max_hybrid(notebook_id):
     for index,seq_id_file_ in  enumerate(json_data[notebook_id]):              
         if os.path.exists("HybridPipeGen/core/tmpdata/merge_max_result_rl/"+str(notebook_id)) and len(os.listdir("HybridPipeGen/core/tmpdata/merge_max_result_rl/"+str(notebook_id)))!=0:
             break
+        str_run_max = 'start run selected best HybridPipe '+str(seq_id_file_.split('.npy')[0])+' on test dataset:'
+        print("\033[0;33;40m"+str_run_max+"\033[0m")
         if seq_id_file_ != "origin.npy":
             item_name = seq_id_file_.split(".npy")[0]
             item = item_name + ".json"
