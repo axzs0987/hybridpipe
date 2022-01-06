@@ -41,19 +41,19 @@ class ImputerCatPrim(Primitive):
         cat_trainX, num_trainX = catch_num(train_x)
         cat_testX, num_testX = catch_num(test_x)
         self.imp.fit(cat_trainX)
-        print('cat_trainX.columns', len(cat_trainX.index))
-        print('num_trainX.columns', len(num_trainX.index))
+        # print('cat_trainX.columns', len(cat_trainX.index))
+        # print('num_trainX.columns', len(num_trainX.index))
         cols = list(cat_trainX.columns)
         cat_trainX = self.imp.fit_transform(cat_trainX.reset_index(drop=True))
         cat_trainX = pd.DataFrame(cat_trainX).reset_index(drop=True).infer_objects()
         cols = ['col_'+str(i) for i in cat_trainX.columns]
         cat_trainX.columns = cols
-        print('num_trainX', num_trainX)
+        # print('num_trainX', num_trainX)
         cat_trainX = cat_trainX.reset_index(drop=True)
         num_trainX = num_trainX.reset_index(drop=True)
         
         train_data_x = pd.concat([cat_trainX, num_trainX],axis=1)
-        print('cat_testX.columns', cat_testX.columns)
+        # print('cat_testX.columns', cat_testX.columns)
         cols = list(cat_testX.columns)
         cat_testX = self.imp.fit_transform(cat_testX.reset_index(drop=True))
         cat_testX = pd.DataFrame(cat_testX).reset_index(drop=True).infer_objects()

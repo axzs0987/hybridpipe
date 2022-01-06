@@ -2,8 +2,6 @@ import math
 from copy import deepcopy
 import numpy as np
 from MLPipeGen.core.config import Config
-from MLPipeGen.core.logger import TensorBoardLogger
-from MLPipeGen.core.util import get_output_folder
 import os
 from MLPipeGen.core.env.primitives.primitive import Primitive
 from MLPipeGen.core.env.primitives.imputercat import ImputerCatPrim
@@ -32,7 +30,7 @@ class Tester:
         
     def get_five_items_from_pipeline(self, fr, state, reward_dic, seq, taskid, need_save=True):
         tryed_list = []
-        print("\033[1;34m"+ str(fr) +"\033[0m")
+        # print("\033[1;34m"+ str(fr) +"\033[0m")
         epsilon = self.epsilon_by_frame(fr)
         pipeline_index = self.env.pipeline.get_index()
         has_num_nan, has_cat_nan = self.env.has_nan()
@@ -84,7 +82,7 @@ class Tester:
                     try:
                         action, isModel = self.agent.act(state, self.config.lpipelines[self.env.pipeline.logic_pipeline_id][pipeline_index], tryed_list, epsilon, not_random=True, taskid=taskid)
                     except:
-                        print('error state:', state)
+                        # print('error state:', state)
                         return
                     temp = self.config.imputernums[action]
                     step = deepcopy(temp)
@@ -229,7 +227,7 @@ class Tester:
             for cid, cl in enumerate(self.config.classifier_predictor_list):
                 if cl.name == self.config.classification_task_dic[i]['model']:
                     select_cl = cl
-            print('taskid', i)
+            # print('taskid', i)
             self.start_time = time.time()
             self.env.reset(taskid=i, default=False, metric=self.config.metric_list[0], predictor=select_cl)
             self.env.pipeline.logic_pipeline_id, _ = self.agent.act(self.env.lpip_state, 'LogicPipeline', epsilon = self.epsilon_by_frame(0), not_random=True)
@@ -257,7 +255,7 @@ class Tester:
             for cid, cl in enumerate(self.config.classifier_predictor_list):
                 if cl.name == self.config.classification_task_dic[i]['model']:
                     select_cl = cl
-            print('taskid', i)
+            # print('taskid', i)
             self.start_time = time.time()
             self.env.reset(taskid=i, default=False, metric=self.config.metric_list[0], predictor=select_cl)
             self.env.pipeline.logic_pipeline_id, _ = self.agent.act(self.env.lpip_state, 'LogicPipeline', epsilon = self.epsilon_by_frame(0), not_random=True)
@@ -284,7 +282,7 @@ class Tester:
         for cid, cl in enumerate(self.config.classifier_predictor_list):
             if cl.name == self.config.classification_task_dic[i]['model']:
                 select_cl = cl
-        print('taskid', i)
+        # print('taskid', i)
         self.start_time = time.time()
         self.env.reset(taskid=i, default=False, metric=self.config.metric_list[0], predictor=select_cl)
         self.env.pipeline.logic_pipeline_id, _ = self.agent.act(self.env.lpip_state, 'LogicPipeline', epsilon = self.epsilon_by_frame(0), not_random=True)

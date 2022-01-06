@@ -52,7 +52,7 @@ class RnnDQN(nn.Module):
 
         # seq_embedding_param
         prim_nums = len(set(self.config.imputernums) | set(self.config.encoders) | set(self.config.fpreprocessings) | set(self.config.fengines) | set(self.config.fselections)) + 1 + 1
-        print('prim_nums', prim_nums)
+        # print('prim_nums', prim_nums)
         seq_embedding_dim = self.config.seq_embedding_dim
         # seq_lstm param
         seq_hidden_size = self.config.seq_hidden_size
@@ -155,7 +155,7 @@ class RnnDQN(nn.Module):
         # print('predictor_feature', predictor_feature)
         # print('lpipeline_feature', lpipeline_feature)
         # print('self.lpipeline_nums', self.lpipeline_nums)
-        print(seq_feature)
+        # print(seq_feature)
         seq_embed_feature = self.seq_embedding(seq_feature) # (batch_size , 6 , seq_embedding_dim)
         # batch_first=False
         seq_embed_feature = seq_embed_feature.permute(1,0,2) # (6 , batch_size , seq_embedding_dim)

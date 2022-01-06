@@ -12,7 +12,7 @@ class AccuracyMetric(Metric):
         self.type = 'Classifier'
     def evaluate(self, pred_y, test_y):
         if pred_y is None or test_y is None:
-            print('metric load no data')
+            # print('metric load no data')
             return
         if isinstance(pred_y, pd.Series):
             pred_y = pred_y.values
@@ -30,7 +30,7 @@ class F1Metric(Metric):
         
     def evaluate(self, pred_y, test_y):
         if pred_y is None or test_y is None:
-            print('metric load no data')
+            # print('metric load no data')
             return
         if isinstance(pred_y, pd.Series):
             pred_y = pred_y.values
@@ -48,7 +48,7 @@ class AucMetric(Metric):
         
     def evaluate(self, pred_y, test_y):
         if pred_y is None or test_y is None:
-            print('metric load no data')
+            # print('metric load no data')
             return
         if isinstance(pred_y, pd.Series):
             pred_y = pred_y.values
@@ -67,7 +67,7 @@ class MseMetric(Metric):
         
     def evaluate(self, pred_y, test_y):
         if pred_y is None or test_y is None:
-            print('metric load no data')
+            # print('metric load no data')
             return
         if isinstance(pred_y, pd.Series):
             pred_y = pred_y.values

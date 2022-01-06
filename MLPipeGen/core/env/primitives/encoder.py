@@ -86,19 +86,19 @@ class OneHotEncoderPrim(Primitive):
         dummies = []
         len_trainx = num_trainX.shape[0]
         len_testx = num_testX.shape[0]
-        print('onehotencoder train_x', train_x)
-        print('onehotencoder test_x', test_x)
-        print('len_trainx', len_trainx)
-        print('len_testx', len_testx)
+        # print('onehotencoder train_x', train_x)
+        # print('onehotencoder test_x', test_x)
+        # print('len_trainx', len_trainx)
+        # print('len_testx', len_testx)
         for col in cat_cols:
-            print('col',col)
+            # print('col',col)
             temp = pd.get_dummies(pd.concat([cat_trainX[col], cat_testX[col]], axis=0).reset_index(drop=True), prefix=col)
             # print('temp',temp)
             train_d = temp.iloc[0:len_trainx,:].reset_index(drop=True)
-            print('len_train_d', train_d.shape[0])
+            # print('len_train_d', train_d.shape[0])
             # print('train_d', train_d)
             test_d = temp.iloc[len_trainx:,:].reset_index(drop=True)
-            print('len_test_d', test_d.shape[0])
+            # print('len_test_d', test_d.shape[0])
             # print('test_d', test_d)
 
             # self.preprocess.fit(temp)
@@ -109,10 +109,10 @@ class OneHotEncoderPrim(Primitive):
             test_x = pd.concat([test_x.reset_index(drop=True), test_d], axis=1).reset_index(drop=True)
             # test_x.drop(col)
         # print('train_x.columns', train_x.columns)
-        print('get dummies before drop', train_x)
+        # print('get dummies before drop', train_x)
         train_x= train_x.drop(columns = cat_cols).infer_objects()
         # print('test_x.columns', test_x.columns)
-        print('get dummies after drop', train_x)
+        # print('get dummies after drop', train_x)
         test_x = test_x.drop(columns = cat_cols).infer_objects()
         # cat_trainX = self.preprocess.transform(cat_trainX)
         # cat_testX = self.preprocess.transform(cat_testX)
@@ -159,7 +159,7 @@ class LabelEncoderPrim(Primitive):
     
     def transform(self, train_x, test_x, train_y):
         cat_trainX, num_trainX = catch_num(train_x)
-        print('num_trainx', num_trainX)
+        # print('num_trainx', num_trainX)
         cat_testX, num_testX = catch_num(test_x)
         cols = cat_trainX.columns
 
@@ -172,11 +172,11 @@ class LabelEncoderPrim(Primitive):
 
         cat_trainX = cat_trainX.infer_objects()
         cat_trainX = cat_trainX.iloc[:,~cat_trainX.columns.duplicated()]
-        print('cat_trainX', cat_trainX)
+        # print('cat_trainX', cat_trainX)
         train_data_x = pd.concat([cat_trainX.reset_index(drop=True), num_trainX.reset_index(drop=True)],axis=1).infer_objects()
 
         cat_testX = cat_testX.infer_objects()
         cat_testX = cat_testX.iloc[:,~cat_testX.columns.duplicated()]
         test_data_x = pd.concat([cat_testX.reset_index(drop=True), num_testX.reset_index(drop=True)],axis=1).infer_objects()
-        print('labelencoder', train_data_x)
+        # print('labelencoder', train_data_x)
         return train_data_x, test_data_x

@@ -2,7 +2,6 @@ import math
 from copy import deepcopy
 import numpy as np
 from MLPipeGen.core.config import Config
-from MLPipeGen.core.util import get_output_folder
 import os
 from MLPipeGen.core.env.primitives.primitive import Primitive
 from MLPipeGen.core.env.primitives.imputercat import ImputerCatPrim
@@ -30,7 +29,7 @@ class Trainer:
         # self.agent.save_config(self.outputdir)
 
     def get_five_items_from_pipeline(self, fr, state, reward_dic, one_pip_ismodel, one_pip_sample, result_log, seq):
-        print("\033[1;34m"+ str(fr) +"\033[0m")
+        # print("\033[1;34m"+ str(fr) +"\033[0m")
         epsilon = self.epsilon_by_frame(fr)
         pipeline_index = self.env.pipeline.get_index()
         has_num_nan, has_cat_nan = self.env.has_nan()
@@ -41,7 +40,7 @@ class Trainer:
                 try:
                     action, isModel = self.agent.act(state, self.config.lpipelines[self.env.pipeline.logic_pipeline_id][pipeline_index], tryed_list, epsilon)
                 except:
-                    print('error state:', state)
+                    # print('error state:', state)
                     return
                 temp = self.config.imputernums[action]
                 step = deepcopy(temp)
@@ -55,7 +54,7 @@ class Trainer:
             else:
                 step = Primitive()
         elif self.config.lpipelines[self.env.pipeline.logic_pipeline_id][pipeline_index]== 'Encoder': #pipeline_index == 2: # encoder
-            print('has_cat_cols', self.env.has_cat_cols())
+            # print('has_cat_cols', self.env.has_cat_cols())
             if self.env.has_cat_cols():
                 action, isModel = self.agent.act(state, self.config.lpipelines[self.env.pipeline.logic_pipeline_id][pipeline_index], tryed_list, epsilon)
                 temp = self.config.encoders[action]
@@ -85,7 +84,7 @@ class Trainer:
                     try:
                         action, isModel = self.agent.act(state, self.config.lpipelines[self.env.pipeline.logic_pipeline_id][pipeline_index], tryed_list, epsilon)
                     except:
-                        print('error state:', state)
+                        # print('error state:', state)
                         # return
                         action = -1
                         break
@@ -199,7 +198,7 @@ class Trainer:
             one_pip_sample = []
             self.env.pipeline.logic_pipeline_id, _ = self.agent.act(self.env.lpip_state, 'LogicPipeline', epsilon = epsilon)
             seq = []
-            print('self.env.pipeline.logic_pipeline_id', self.env.pipeline.logic_pipeline_id)
+            # print('self.env.pipeline.logic_pipeline_id', self.env.pipeline.logic_pipeline_id)
 
         # print(reward_dic, one_pip_ismodel, result_log)
         return reward_dic, one_pip_ismodel, one_pip_sample, result_log, seq, state

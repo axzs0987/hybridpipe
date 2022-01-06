@@ -3,7 +3,7 @@ import ast
 import astunparse
 from HybridPipeGen.core.read_ipynb import ipynb2py
 import matplotlib.pyplot as plt
-from graphviz import Digraph
+# from graphviz import Digraph
 import os
 import pickle
 import pprint
@@ -1216,11 +1216,11 @@ def save_graph(filepath):
         #print('error')
         return
     graph.build_graph()
-    graph.layout(directory="HybridPipeGen/core/tmpdata/profiling_result/")
+    # graph.layout(directory="HybridPipeGen/core/tmpdata/profiling_result/")
     graph.delete_nodes()
     graph.update_edges()
     graph.get_white_edge_line()
-    graph.layout(directory="HybridPipeGen/core/tmpdata/prenotebook_resfigs/", all_nodes=False)
+    # graph.layout(directory="HybridPipeGen/core/tmpdata/prenotebook_resfigs/", all_nodes=False)
     # #print(filename)
     filename = filepath.split('/')[-1]
     filename = filename.split(".")[0]

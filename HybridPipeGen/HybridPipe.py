@@ -140,18 +140,18 @@ class HybridPipe:
         print('notebook:',self.notebook_id)
         print('accuracy of HIPipe:',hi_score['accuracy_score'])
         print('accuracy of HybridPipe:',hybrid_score['accuracy_score'])
-        if save_fig == False:
-            shutil.rmtree('HybridPipeGen/core/tmpdata/')
-            os.mkdir('HybridPipeGen/core/tmpdata/')
-        else:
-            tmp_path= os.listdir('HybridPipeGen/core/tmpdata/')
-            for tmp_file in tmp_path:
-                if tmp_file != 'profiling_result':
-                    if os.path.isdir('HybridPipeGen/core/tmpdata/'+tmp_file):
-                        shutil.rmtree('HybridPipeGen/core/tmpdata/'+tmp_file)
-                    else:
-                        os.remove('HybridPipeGen/core/tmpdata/'+tmp_file)
-                else:
-                    os.remove('HybridPipeGen/core/tmpdata/profiling_result/example')
+        # if save_fig == False:
+        shutil.rmtree('HybridPipeGen/core/tmpdata/')
+        os.mkdir('HybridPipeGen/core/tmpdata/')
+        # else:
+        #     tmp_path= os.listdir('HybridPipeGen/core/tmpdata/')
+        #     for tmp_file in tmp_path:
+        #         if tmp_file != 'profiling_result':
+        #             if os.path.isdir('HybridPipeGen/core/tmpdata/'+tmp_file):
+        #                 shutil.rmtree('HybridPipeGen/core/tmpdata/'+tmp_file)
+        #             else:
+        #                 os.remove('HybridPipeGen/core/tmpdata/'+tmp_file)
+        #         else:
+        #             os.remove('HybridPipeGen/core/tmpdata/profiling_result/example')
 
 

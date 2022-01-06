@@ -37,10 +37,10 @@ class Primitive:
 
     def can_accept_c(self, data, task=None, larpack=False): # 可以接受不为空的，不存在nan，不存在cat列的df
         if data.empty:
-            print('empty')
+            # print('empty')
             return False
         elif data.shape[1] == 0:
-            print('shape1 = 0')
+            # print('shape1 = 0')
             return False
         cols = data
         num_cols = data._get_numeric_data().columns
@@ -54,10 +54,10 @@ class Primitive:
         #     return False
         with pd.option_context('mode.use_inf_as_null', True):
             if data.isnull().any().any():
-                print('has nan')
+                # print('has nan')
                 return False
         if not len(cat_cols) == 0:
-            print('has cat')
+            # print('has cat')
             return False
         return True
 
