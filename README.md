@@ -35,7 +35,7 @@ The file `example.py` is an example. Modify it according to your configuration.
 
 #### Customized input
 
-You can put new data in the folder `$hybridpipe_HOME/data/`and organize them as:
+You can put new data in the folder `$hybridpipe/data/`and organize them as:
 
 ```python
 hybridpipe
