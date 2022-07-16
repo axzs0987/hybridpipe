@@ -51,28 +51,4 @@ Then modify the input in example.py.
 
 
 
-## Experimental dataset
-
-All experimental datasets can be downloaded via https://www.dropbox.com/s/6xy6m70hjm3bz2l/exp_dataset.zip?dl=0 .
-
-And the experimental datasets is organized as:
-
-```python
-exp_dataset
-├── KGTorrent #input file
-│   ├── dataset #all csv file
-│   └── notebook #all Jupyter notebooks
-├── hipipe_code #.py file of hipipe
-├── end_index # the last position of hipipe that can be inserted into the ML operation
-├── hipipe_graph #the graph of hipipe by profiling hipipe_code
-├── hipipe_result #the result of hipepie on test dataset
-├── candidate_hybridpipe_test_code #the code of candidate hybridpipe on test dataset
-├── candidate_hybridpipe_validation_code #the code of candidate hybridpipe on validation dataset
-├── candidate_hybridpipe_validation_result #the result of candidate hybridpipe on validation dataset
-└── best_hybridpipe_test_result #the result of selected best hybridpipe on test dataset
-```
-
-KGTorrent is the input data, which includes raw dataset and notebook, and other intermediate data can be obtained by our program. Considering that it takes a lot of time to reproduce our experiments from scratch, we provide intermediate data. 
-
-The final evaluation results of hybrid_pipeline are stored in the `best_hybridpipe_test_result` folder, and each folder under this folder is named notebook, which stores the accracy score of each notebook's hybrid_pipeline. 
 
