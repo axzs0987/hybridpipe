@@ -31,8 +31,8 @@ class Logger(object):
     def flush(self):
         pass
 
-sys.stdout = Logger('HybridPipeGen/core/human_run_continue.log', sys.stdout)
-sys.stderr = Logger('HybridPipeGen/core/human_run_continue.log', sys.stderr)
+# sys.stdout = Logger('HybridPipeGen/core/human_run_continue.log', sys.stdout)
+# sys.stderr = Logger('HybridPipeGen/core/human_run_continue.log', sys.stderr)
 
 # dataset_root_path = '/home/datamanager/dataset/statsklearn/dataset/'
 dataset_root_path = 'data/dataset/'
@@ -268,8 +268,6 @@ class Preprocessing:
         self.train_test_split_no_label = 0
         self.model_index = 0
         self.run_faile = 0
-
-        # self.save_path = '/home/yxm/stat_result/'
         self.res_data_path = 'HybridPipeGen/core/hi_res_data/'
         self.val_res_data_path = 'HybridPipeGen/core/hi_val_res_data/'
 
@@ -541,7 +539,7 @@ class Preprocessing:
         if result_id == 2:
             self.end_index = self.train_test_split_index +2
         else:
-            self.end_index = self.train_test_split_index - 1
+            self.end_index = self.train_test_split_index+1
         
         #print(self.code.split('\n')[self.end_index])
         #print('self.end_index',self.end_index)
@@ -661,7 +659,6 @@ class Preprocessing:
         try:
             ns = {}
             exec(cm,ns)
-            print("\033[0;32;40msucceed\033[0m")
             can_run = True
         except Exception as e:
             # traceback.print_exc()
@@ -824,144 +821,6 @@ class Preprocessing:
                 self.run_faile += 1
                 with open("error_dict.json", 'w') as f:
                     json.dump(error_dict, f)
-
-    def batch_processing(self):
-        info_triple = np.load("../statsklearn/NewDataInfoTriple.npy", allow_pickle=True).item()
-        # filenames = os.listdir("notebook597")
-        # with open('need_rerun.json','r') as f:
-            # notebooks_ids = json.load(f)
-        # notebooks_ids = list(info_triple.keys())
-        # with open("name2id.json", 'r') as f:
-        #     name2id = json.load(f)
-        # notebooks = [int(filename.split('.')[0]) for filename in filenames]
-
-        self.cant_find_train_test = 0
-        linear_reg = 0
-        add_faile = 0
-        self.run_faile = 0
-        all_ = 0
-        if os.path.exists('HybridPipeGen/core/tmpdata/human_running_time_1.json'):
-            with open('HybridPipeGen/core/tmpdata/human_running_time_1.json','r') as f:
-                running_time = json.load(f)
-        else:
-            running_time = {}
-        need_continue = True
-        
-        # split_len = int(len(notebooks_ids)/9)
-        # notebooks_segments = [notebooks_ids[i*split_len: i*split_len + split_len] for i in range(0,8)]
-        # notebooks_segments.append(notebooks_ids[8*split_len: ])
-        # global specific_split
-        # for index,seg in enumerate(notebooks_segments):
-        #     if index != specific_split:
-        #         continue
-        #     for ind,notebook_id in enumerate(seg):
-        #         #print(ind)
-        #         # if ind <=37:
-        #         #     continue 
-        #         # if notebook_id == 'bandlote_telco-churn-business-analysis':
-        #         #     continue
-        #         # notebooks_id_num = name2id[notebook_id]
-        #         # if notebooks_id_num == '423':
-        #             # need_continue = False
-        #             # continue
-        #         # if need_continue:
-        #             # continue
-        #         # if notebook_id in runed:
-        #             # continue
-        #         all_ += 1
-        #         # runed.append(notebook_id)
-        #         # np.save('runed.npy', runed)
-        #         #print("#########")
-        #         #print(notebook_id)
-        #         exist_f = open("/home/yxm/staticfg-master/origin_215.txt", "r")
-        #         exist = exist_f.readlines()
-        #         exitst_ = [x.strip("\n") for x in exist]
-        #         if notebook_id not in exitst_:
-        #             continue
-                
-        #         if os.path.exists(self.save_path + notebook_id):
-        #             if len(os.listdir(self.save_path + notebook_id)) != 0:
-        #                 continue
-        #         if not os.path.exists("../data/notebook/" + str(notebook_id) +'.ipynb'):
-        #             continue
-        #         res = self.profiling_code(notebook_id, need_remove_model=1)
-        #         #print('save_code', res)
-        #         if self.info_triple[notebook_id]['model_type'] == 'LinearRegression':
-        #             linear_reg += 1
-        #             if os.path.exists('HybridPipeGen/core/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py'):
-        #                 os.system('rm HybridPipeGen/core/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py')
-        #             if os.path.exists('HybridPipeGen/core/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy'):
-        #                 os.system('rm HybridPipeGen/core/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy')
-        #         else:
-        #             if res == True:
-        #                 self.run_origin_test(notebook_id, need_try_again=2)
-        #             else:
-        #                 add_faile += 1
-        #         #print(ind)
-        #         #print(notebook_id)
-        #         # break
-                
-        #     #print('cant_find_train_test', self.cant_find_train_test)
-        #     #print('linear_reg', linear_reg)
-        #     #print('add_faile', add_faile)
-        #     #print('run_faile', self.run_faile)
-        #     #print('all_', all_)
-        # exist_f = open("/home/yxm/staticfg-master/origin.txt", "r")
-        # exist = exist_f.readlines()
-        # exist_ = [x.strip("\n") for x in exist]
-        with open('fix_model.json','r') as f:
-            notebooks = json.load(f)
-        exist_f = open("/home/yxm/staticfg-master/all_s.txt", "r")
-        exist = exist_f.readlines()
-        exitst_ = [x.strip("\n") for x in exist]
-        # notebooks = list(set(notebooks) & set(exitst_))
-        # exist = exist_f.readlines()
-        # exist_ = [x.strip("\n") for x in exist]
-        #print(len(notebooks))
-        for ind in range(len(exitst_)):
-            notebook_id = exitst_[ind]
-            # notebook_id = ind
-            # #print(ind)
-            # if notebook_id !='bilal75210_project-data-science':
-                # continue
-            # #print(ind)
-            if notebook_id!="akansha23_heart-diseases-visualisation-and-prediction":
-                continue
-            # if ind <=408:
-            #     continue
-            all_ += 1
-            #print("#########")
-            #print(notebook_id)
-            #print("/HybridPipeGen/core/tmpdata/prenotebook_res/" + notebook_id+".npy")
-            # if notebook_id != "bparesh_extensive-eda-models-logistic-random-forest":
-            #     continue
-            # if os.path.exists("/home/yxm/staticfg-master/HybridPipeGen/core/tmpdata/prenotebook_res/" + notebook_id+".npy"):
-            #     #print("............")
-            #     continue
-            if not os.path.exists("../data/notebook/" + str(notebook_id) +'.ipynb'):
-                continue
-            res = self.profiling_code(notebook_id, need_remove_model=1)
-            #print('save_code', res)
-            if self.info_triple[notebook_id]['model_type'] == 'LinearRegression':
-                linear_reg += 1
-                if os.path.exists('HybridPipeGen/core/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py'):
-                    os.system('rm HybridPipeGen/core/tmpdata/runned_notebook/'+ str(self.notebook_id) + '.py')
-                if os.path.exists('HybridPipeGen/core/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy'):
-                    os.system('rm HybridPipeGen/core/tmpdata/prenotebook_res/'+ str(self.notebook_id) + '.npy')
-            else:
-                if res == True:
-                    self.run_origin_test(notebook_id, need_try_again=2)
-                else:
-                    add_faile += 1
-            #print(ind)
-            #print(notebook_id)
-            # break
-        #print('cant_find_train_test', self.cant_find_train_test)
-        #print('linear_reg', linear_reg)
-        #print('add_faile', add_faile)
-        #print('run_faile', self.run_faile)
-        #print('all_', all_)
-            
 
         
 def run_origin_path(path):
@@ -1407,88 +1266,6 @@ def run_max_hybrid_add3():
     #print(len(res))
     #print(res)
 
-def run_validation():
-    # notebooks = os.listdir('HybridPipeGen/core/tmpdata/prenotebook_res/')
-    with open('return_cross.json','r') as f:
-            notebooks = json.load(f)
-    exist_f = open("/home/yxm/staticfg-master/shibai.txt", "r")
-    exist = exist_f.readlines()
-    exitst_ = [x.strip("\n") for x in exist]
-    
-    notebook_m = os.listdir('merge_code_1')
-    # notebooks = list(set(notebooks) & set(notebook_m))
-    # notebooks = list(set(notebooks) & set(exitst_))
-    notebooks = os.listdir('HybridPipeGen/core/tmpdata/cross_val_res')
-    notebooks = list(set(notebooks) & set(notebook_m))
-    for notebook_id in exitst_:
-        
-        # notebook_id = notebook_id_file.split('.')[0]
-        exist_f = open("/home/yxm/staticfg-master/origin_1756.txt", "r")
-        exist = exist_f.readlines()
-        exitst_ = [x.strip("\n") for x in exist]
-        # if notebook_id !='7752056' :
-        #         continue
-        # if notebook_id not in exitst_:
-            # continue
-        # if notebook_id == 'adrkr7_kernel5ee8529b4e' or notebook_id == 'd34th4ck3r_kernel649ffd0ea8':
-        #     continue
-        # exist_f = open("/home/yxm/staticfg-master/all_same.txt", "r")
-        # exist = exist_f.readlines()
-        # exitst_ = [x.strip("\n") for x in exist]
-        # if notebook_id not in exitst_:
-        #     continue
-        # if notebook_id == "arunimsamudra_heart-disease-data-visualisation-and-prediction" :#太慢了xgb
-        #     continue     
-
-        filelist = os.listdir('HybridPipeGen/core/tmpdata/cross_validation_code/'+notebook_id)
-        # filelist.sort()
-        # if not os.path.exists("HybridPipeGen/core/tmpdata/merge_validation_result_1600/"+notebook_id):
-            # os.mkdir("HybridPipeGen/core/tmpdata/merge_validation_result_1600/"+notebook_id)
-        # if notebook_id != "1395715" :
-        #     continue 
-        # if len(filelist)<=1000:
-        #     continue
-        for item in filelist:
-            # if item == "7.json" and notebook_id == "azmatsiddique_social-network-ads-gridsearch-eda":
-            #     continue 
-
-
-            # if item != "origin.json":
-            #     continue
-
-                
-            # if item.split('.')[0] != analyze_score[notebook_id]['best_index'].split('.')[0]:
-                # continue
-            if os.path.exists("HybridPipeGen/core/tmpdata/cross_val_res/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
-                continue
-            # if notebook_id != str(322282) or item !='25.json':
-            #     continue
-            #print("item,", item)
-            #print("notebook,",notebook_id)
-            # if notebook_id == "drfrank_heart-disease-visualization-and-machine-learning" and item == "42.json":
-            #     continue
-            start_time = time.time()
-            try:
-                run_path('HybridPipeGen/core/tmpdata/cross_validation_code/'+notebook_id+'/'+item, replace_code = 'cross_val_res/',test=False)
-            # except:
-            except func_timeout.exceptions.FunctionTimedOut:
-                if os.path.exists("HybridPipeGen/core/tmpdata/validation_running_time_cross.json"):
-                    with open("HybridPipeGen/core/tmpdata/validation_running_time_cross.json", 'r') as f:
-                        validation_running_time = json.load(f)
-                if str(notebook_id) not in validation_running_time:
-                    validation_running_time[str(notebook_id)] = {}
-                end = time.time()
-                seq_id = item.split('.json')[0]
-                validation_running_time[str(notebook_id)][seq_id] = end-start_time
-                # #print("xxxxxxxxxx")
-                # #print(validation_running_time)
-                with open("HybridPipeGen/core/tmpdata/validation_running_time_cross.json", 'w') as f:
-                    json.dump(validation_running_time, f)
-                #print('执行函数超时')
-            gc.collect()
-            # break
-        # break
-        # gc.collect()
 def run_validation_planB():
     # notebooks = os.listdir('HybridPipeGen/core/tmpdata/prenotebook_res/')
     notebooks = os.listdir('HybridPipeGen/core/tmpdata/planB_cross_validation_code')
@@ -1640,56 +1417,7 @@ def how_much_run():
     runed_list = os.listdir('HybridPipeGen/core/tmpdata/prenotebook_res')
     with open("runed1.json",'w') as f:
         json.dump(runed_list,f)
-def run_validation_new():
-    notebooks = os.listdir('HybridPipeGen/core/tmpdata/merge_validation_code_new')
-    for notebook_id_file in notebooks:
-        notebook_id = notebook_id_file.split('.')[0]
-        exist_f = open("/home/yxm/staticfg-master/test_error.txt", "r")
-        exist = exist_f.readlines()
-        exitst_ = [x.strip("\n") for x in exist]
-        if notebook_id not in exitst_:
-            continue 
-        if notebook_id == "adichamoli_support-vector-regression" :#跑完
-            continue
-        if notebook_id == "sumitkumar02_eda-and-classifying-heart-disease-patients":#跑完
-            continue
-        if notebook_id == "apollopower_ibm-attrition-visualization-random-forests":
-            continue 
-        if notebook_id == "adeyoyintemidayo_diabetes-prediction": #跑完
-            continue 
-        # if notebook_id == "mysecret_hw-churn-modelling":#总被杀
-        #     continue
-        # if notebook_id =="sidsiddu_kernal-svm":#卡
-        #     continue
-        # if notebook_id != "azmatsiddique_social-network-ads-gridsearch-eda" and notebook_id != "sidsiddu_kernal-svm" and notebook_id != "mysecret_hw-churn-modelling":#被杀
-        #     continue
-        if notebook_id == "arya24_notebook1430e96cf2":#跑完
-            continue
-        if notebook_id == 'online0147_10-19-19':#跑完
-            continue
-        if notebook_id == 'atilayyinanc_telco-churn':#跑完
-            continue
-        filelist = os.listdir('HybridPipeGen/core/tmpdata/merge_validation_code_new/'+notebook_id)
-        # filelist.sort()
-        # if notebook_id != "championrunner_graduate-admissions" :
-        #     continue 
-        for item in filelist:
-            # if item != "origin.json":
-            #     continue
-            if item == "7.json" and notebook_id == "sidsiddu_kernal-svm":
-                continue
-            if os.path.exists("HybridPipeGen/core/tmpdata/merge_validation_result_new/"+str(notebook_id)+'/'+item.split('.')[0]+'.npy'):
-                continue
-            #print("item,", item)
-            #print("notebook,",notebook_id)
-            try:
-                run_path('HybridPipeGen/core/tmpdata/merge_validation_code_new/'+notebook_id+'/'+item, replace_code = 'merge_validation_result_new/',test=False)
-            # except:
-            except func_timeout.exceptions.FunctionTimedOut:
-                print('执行函数超时')
-            except:
-                print("其他错误")
-            gc.collect()
+
 def load_code_base(path, test):
     with open(path, 'r') as f:
         dict_ = json.load(f)

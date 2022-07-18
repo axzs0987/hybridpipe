@@ -289,7 +289,7 @@ class Tester:
         state = self.env.get_state()
         for fr in range(self.pre_fr + 1, self.pre_fr + 7):
             state, reward_dic, seq, reward, done = self.get_five_items_from_pipeline(fr, state, reward_dic, seq, taskid=i,need_save=False)
-        score += reward
+        score = reward
 
-        return seq
+        return seq, score
         # return score/14

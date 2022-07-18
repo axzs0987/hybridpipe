@@ -138,6 +138,7 @@ class Pipeline:
             data = data.iloc[: 1500, :]
         
         self.data_y = data.iloc[:, label_index].values
+
         self.data_x = data.drop(columns = [data.columns[label_index]], axis = 1)
         # self.data_x = data.iloc[:, :-1]
         # self.data_y = data.iloc[:, -1].values
@@ -158,9 +159,10 @@ class Pipeline:
         # print('test_y', self.data_y)
         try:
             self.pred_y = self.predictor.transform(self.train_x, self.train_y, self.test_x)
+            
             self.result = self.metric.evaluate(self.pred_y, self.test_y)
         except Exception as e:
-            # print("\033[1;31m:" + str(e)+"\033[0m")
+            print("\033[1;31m:" + str(e)+"\033[0m")
             self.result = -1
         # print("\033[1;33mtaskid:" + str(self.taskid) + ' '+str(self.result) +"\033[0m")
         return self.result

@@ -4,9 +4,12 @@ import os
 from HybridPipeGen.core.preprocessing import *
 from HybridPipeGen.core.NotebookGraph import profile_hipipe
 from HybridPipeGen.core.merge import *
+from HybridPipeGen.core.al.preprocessing import generate_one_test_features
 from MLPipeGen.MLPipe import MLPipe
 import pandas as pd
 import shutil
+from HybridPipeGen.core.al.finetune import *
+from model import ScoreNN
 
 class HybridPipe:
     def __init__(self, notebook_path, data_path, label_index, model):
@@ -69,6 +72,7 @@ class HybridPipe:
             json.dump(test_index, f)
 
     def combine(self):
+        print("\033[0;33;40mstart run HAIPipe:\033[0m")
         profile_hipipe(self.notebook_id)
         if not os.path.exists('HybridPipeGen/core/tmpdata/rl_test_merge_code'):
             os.mkdir('HybridPipeGen/core/tmpdata/rl_test_merge_code')
@@ -78,14 +82,17 @@ class HybridPipe:
             os.mkdir('HybridPipeGen/core/tmpdata/rl_cross_validation_code')
         if not os.path.exists('HybridPipeGen/core/tmpdata/rl_cross_validation_code_py'):
             os.mkdir('HybridPipeGen/core/tmpdata/rl_cross_validation_code_py')
-        merger = Merger(4)
+        merger = Merger()
         merger.merging_one_notebook_rl(self.notebook_id, self.ai_sequence)
         transform_one_validation_rl(self.notebook_id)
-        transform_one_origin_validation_code(self.notebook_id)
+        transform_one_validation_rl_origin(self.notebook_id)
 
     def generate_mlpipe(self):
+        print("\033[0;33;40mstart run AIPipe:\033[0m")
         mlpipe = MLPipe(self.data_path, self.label_index)
-        self.ai_sequence = mlpipe.inference()
+        self.ai_sequence, self.ml_score = mlpipe.inference()
+        print("\033[0;32;40msucceed\033[0m")
+        print('\n')
 
 
     def evaluate_hi(self):
@@ -101,18 +108,45 @@ class HybridPipe:
         res = pro.profiling_code(self.notebook_id, need_remove_model=1)
         add_faile = 0
         #print('save_code', res)
-        print("\033[0;33;40mstart run HIPipe on test dataset:\033[0m")
+        print("\033[0;33;40mstart run HIPipe:\033[0m")
         if res == True:
             pro.run_origin_test(self.notebook_id, need_try_again=2)
         else:
             add_faile += 1
+        print("\033[0;32;40msucceed\033[0m")
         print('\n')
 
     def evalaute_hybrid(self):
         run_one_validation_rl(self.notebook_id)
-        print('\n')
+        # print('\n')
         self.select_best_hybrid()
         run_one_max_hybrid(self.notebook_id)
+        print('\n')
+
+    def select_best_hybrid_by_al(self, K = 20, T = 5):
+        if not os.path.exists("HybridPipeGen/core/tmpdata/merge_max_result_rl/"):
+            os.mkdir("HybridPipeGen/core/tmpdata/merge_max_result_rl/")
+        if not os.path.exists("HybridPipeGen/core/tmpdata/rl_cross_val_res/"):
+            os.mkdir("HybridPipeGen/core/tmpdata/rl_cross_val_res/")
+        if not os.path.exists("HybridPipeGen/core/tmpdata/merge_max_result_rl/" + self.notebook_id):
+            os.mkdir("HybridPipeGen/core/tmpdata/merge_max_result_rl/" + self.notebook_id)
+        if not os.path.exists("HybridPipeGen/core/tmpdata/rl_cross_val_res/" + self.notebook_id):
+            os.mkdir("HybridPipeGen/core/tmpdata/rl_cross_val_res/" + self.notebook_id)
+    
+        generate_one_test_features(self.notebook_id)
+        model = torch.load('model/10')
+        
+        k = int(K / T)
+        V = K - k*T
+
+        ft = Finetue(self.notebook_id, k, T, V, model)
+        ft.finetune(i=True, r=True, d=True)
+
+        result, val_score, best_seq_id = ft.get_result()
+
+        self.hybrid_score = result
+        self.hybrid_index = best_seq_id
+        print("\033[0;32;40msucceed\033[0m")
         print('\n')
 
     def select_best_hybrid(self):
@@ -133,16 +167,18 @@ class HybridPipe:
             
     def output(self,hybrid_name,save_fig =False):
         hi_score = np.load("HybridPipeGen/core/tmpdata/prenotebook_res/"+self.notebook_id+'.npy', allow_pickle=True).item()
-        note_test_path = os.listdir("HybridPipeGen/core/tmpdata/merge_max_result_rl/"+self.notebook_id)
-        hybrid_score = np.load("HybridPipeGen/core/tmpdata/merge_max_result_rl/"+self.notebook_id+'/'+note_test_path[0], allow_pickle=True).item()
-        hybrid_index = note_test_path[0].split('.npy')[0]
-        if hybrid_index!='origin':
-            shutil.copyfile('HybridPipeGen/core/tmpdata/rl_test_merge_code_py/'+self.notebook_id +'/'+hybrid_index+'.py', hybrid_name)
+        # note_test_path = os.listdir("HybridPipeGen/core/tmpdata/merge_max_result_rl/"+self.notebook_id)
+        # hybrid_score = np.load("HybridPipeGen/core/tmpdata/merge_max_result_rl/"+self.notebook_id+'/'+note_test_path[0], allow_pickle=True).item()
+        # hybrid_index = note_test_path[0].split('.npy')[0]
+
+        if self.hybrid_index!='origin':
+            shutil.copyfile('HybridPipeGen/core/tmpdata/rl_test_merge_code_py/'+self.notebook_id +'/'+self.hybrid_index+'.py', hybrid_name)
         else:
-            shutil.copyfile('copy HybridPipeGen/core/tmpdata/prenotebook_code/'+self.notebook_id +'.py', hybrid_name)
+            shutil.copyfile('HybridPipeGen/core/tmpdata/prenotebook_code/'+self.notebook_id +'.py', hybrid_name)
         print('notebook:',self.notebook_id)
         print('accuracy of HIPipe:',hi_score['accuracy_score'])
-        print('accuracy of best HybridPipe',note_test_path[0].split('.npy')[0],':',hybrid_score['accuracy_score'])
+        print('accuracy of AIPipe:',self.ml_score)
+        print('accuracy of HAIPipe',self.hybrid_index,':',self.hybrid_score['accuracy_score'])
         # if save_fig == False:
         shutil.rmtree('HybridPipeGen/core/tmpdata/')
         os.mkdir('HybridPipeGen/core/tmpdata/')

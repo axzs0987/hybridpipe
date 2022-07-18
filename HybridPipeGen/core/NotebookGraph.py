@@ -1267,46 +1267,7 @@ def count_edge(is_dataset):
         with open("all_edge_split_point_dict_not_dataset.json", 'w') as f:
             json.dump(all_split_point_edge_dict, f)
 # def count_dataset_edge():
-def batch_build_graph():
-    root_path = 'HybridPipeGen/core/tmpdata/prenotebook_code/'
-    filenames = os.listdir(root_path)
-    # #print(len(filenames))
-    # root_path = 'HybridPipeGen/core/tmpdata/prenotebook_graph/'
-    # filenames = os.listdir(root_path)
-    # #print(len(filenames))
-    highlighted_num = 0
-    all_ = 0
-    is_highlight_list= []
-    for file_name in filenames:
-        # if '.ipynb' not in file_name:
-        #     continue5189013
-        
-        # if file_name == '1395715.py' or file_name == '3715076.py' or file_name == '5189013.py':
-            # continue
 
-        # os.system('black prenotebook_code/'+file_name)
-        exist_f = open("/home/yxm/staticfg-master/origin_new.txt", "r")
-        exist = exist_f.readlines()
-        exitst_ = [x.strip("\n") for x in exist]
-        notebook_id = file_name.strip(".py")
-        
-        if notebook_id not in exitst_:
-            continue
-        file_path = root_path + file_name
-        filename = file_path.split('/')[-1]
-        filename = filename.split(".")[0]
-        # if os.path.exists('HybridPipeGen/core/tmpdata/prenotebook_graph/'+filename+".pkl"):
-            # continue
-        # #print('\033[1;32;43mbuliding ' + file_name+" ........"+ '\033[0m')
-        highlighted = save_graph(file_path)
-        # if highlighted:
-            # highlighted_num += 1
-            # is_highlight_list.append(int(file_name.split('.')[0]))
-        all_ += 1
-    # #print(highlighted_num)
-    # #print(all_)
-    # with open("highlight_list.json", 'w') as f:
-        # json.dump(is_highlight_list, f)
 def profile_hipipe(notebook_id):
     if not os.path.exists('HybridPipeGen/core/tmpdata/prenotebook_graph'):
         os.mkdir('HybridPipeGen/core/tmpdata/prenotebook_graph')

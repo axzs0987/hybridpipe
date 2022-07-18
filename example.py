@@ -5,7 +5,7 @@ def generate_one_hybrid(notebook_path, dataset_path, label_index, model, hybridp
     hybrid_pipe.evaluate_hi()
     hybrid_pipe.generate_mlpipe()
     hybrid_pipe.combine()
-    hybrid_pipe.evalaute_hybrid()
+    hybrid_pipe.select_best_hybrid_by_al(K=20, T=5)
     hybrid_pipe.output(hybridpipe_code_file,save_fig=True)
 
 if __name__ == "__main__":

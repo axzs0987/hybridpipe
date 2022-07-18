@@ -309,11 +309,3 @@ class Config:
     lp_loss_log_file_name: str = 'MLPipeGen/core/logs/'+str(version)+'_more_model'+'/lp_loss_log.npy'
     test_reward_dic_file_name: str = 'MLPipeGen/core/logs/'+str(version)+'_more_model'+'/test_reward_dict.npy'
     model_dir: str = 'MLPipeGen/core/models/'+str(version)
-
-    single_result_log_file_name: str = 'single_result_log_tanh_v'+ str(version) +'.npy'
-    single_loss_log_file_name: str = 'single_loss_log_tanh_v'+ str(version) +'.npy'
-    single_lp_loss_log_file_name: str = 'single_lp_loss_log_tanh_v'+ str(version) +'.npy'
-    single_test_loss_log_file_name: str = 'single_test_loss_log_tanh_v'+ str(version) +'.npy'
-    single_test_reward_dic_file_name: str = 'single_test_lg_reward_dic_tanh_v'+str(version) +'.npy'
-    single_test_q_value_file_name: str = 'single_test_q_value_v'+str(version) +'.npy'
-    single_outputdir: str = './single_train_tanh_v' + str(version)
