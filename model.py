@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from HybridPipeGen.core.al.config import Config
+from haipipe.core.al.config import Config
 from torch.utils.data import Dataset, DataLoader, TensorDataset
 from torch.autograd import Variable
 
@@ -34,16 +34,12 @@ class ScoreNN(nn.Module):
         inp_size = dataset_output_dim + seq_hidden_size*config.seq_len
         self.end_mlp = nn.Sequential(
             nn.Linear(inp_size,int(inp_size / 2)),
-            # nn.BatchNorm1d(int(inp_size / 2), track_running_stats = False),
             nn.LeakyReLU(),
             nn.Linear(int(inp_size / 2), output_dim),
-            # nn.BatchNorm1d(output_dim, track_running_stats = False),
             nn.LeakyReLU(),
             nn.Linear(output_dim, output_dim),
-            # nn.BatchNorm1d(output_dim, track_running_stats = False),
             nn.LeakyReLU(),
             nn.Linear(output_dim, 10),
-            # nn.BatchNorm1d(10, track_running_stats = False),
             nn.LeakyReLU(),
             nn.Linear(10, 1),
             nn.BatchNorm1d(1, track_running_stats = False),
@@ -56,11 +52,8 @@ class ScoreNN(nn.Module):
         seq_embed_feature = self.seq_embedding(pipeline_feature) # (batch_size , seq_len , seq_embedding_dim)
         seq_embed_feature = seq_embed_feature.permute(1,0,2) # (seq_len , batch_size , seq_embedding_dim)
         seq_hidden_feature,(h_1,c_1) = self.seq_lstm(seq_embed_feature) # (6 , batch_size , seq_hidden_size)
-        # batch_first=True
-        # print('dataset_emb', dataset_emb)
         seq_hidden_feature = seq_hidden_feature.permute(1,0,2) # (batch_size , 6 , seq_hidden_size)
         seq_hidden_feature = torch.flatten(seq_hidden_feature, start_dim=1) # (batch_size , 6*seq_hidden_size)
-        # print('seq_hidden_feature', seq_hidden_feature)
         input_feature = torch.cat((dataset_emb, seq_hidden_feature), 1)
         return self.end_mlp(input_feature)
 
@@ -70,7 +63,6 @@ class ScoreNN(nn.Module):
         seq_embed_feature = self.seq_embedding(pipeline_feature) # (batch_size , seq_len , seq_embedding_dim)
         seq_embed_feature = seq_embed_feature.permute(1,0,2) # (seq_len , batch_size , seq_embedding_dim)
         seq_hidden_feature,(h_1,c_1) = self.seq_lstm(seq_embed_feature) # (6 , batch_size , seq_hidden_size)
-        # batch_first=True
         seq_hidden_feature = seq_hidden_feature.permute(1,0,2) # (batch_size , 6 , seq_hidden_size)
         seq_hidden_feature = torch.flatten(seq_hidden_feature, start_dim=1) # (batch_size , 6*seq_hidden_size)
         return seq_hidden_feature
