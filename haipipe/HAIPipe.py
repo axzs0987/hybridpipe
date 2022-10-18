@@ -19,6 +19,8 @@ class HAIPipe:
         label_index: the index of the label column
         model: the model type
         """
+        if not os.path.exists('haipipe/core/tmpdata'):
+            os.mkdir('haipipe/core/tmpdata')
         notebook_id = notebook_path.split('/')[-1].split('.')[0]
         self.notebook_id = notebook_id
         self.data_path = data_path
@@ -194,7 +196,6 @@ class HAIPipe:
         """
         Output the results of HAIPipe
         """
-
         hi_score = np.load("haipipe/core/tmpdata/prenotebook_res/"+self.notebook_id+'.npy', allow_pickle=True).item()
         if self.hai_index!='origin':
             shutil.copyfile('haipipe/core/tmpdata/rl_test_merge_code_py/'+self.notebook_id +'/'+self.hai_index+'.py', hai_name)
