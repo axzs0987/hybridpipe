@@ -320,11 +320,11 @@ class Merger():
         if ope not in list(OperationCode.keys()):
             return False
     
-        if position != 'end':
+        if position != 'end': ### if the position of insert is after or before one HI-operation.
             ### generate the code of AI-operation.
             operation_code = OperationCode[ope]['pre_code'] + OperationCode[ope]['code']
             operation_code = operation_code.replace("-[PLACEHOLDER]-", varible) + '\n'
-            ### find the line number of the HI-operation.
+            ### find the line number of the HI-operation to be inserted.
             found = False
             for edge in self.graph.result_edges:
                 if edge.edge_id == edge_id:
@@ -358,7 +358,7 @@ class Merger():
                 self.code = pre_code + operation_code + edge_code + after_code
             elif position == 'after':
                 self.code = pre_code  + edge_code + operation_code + after_code
-        else:
+        else: ## if the position of insert is the end of the data prep process.
             ### generate the code of AI-operation.
             x_varible = varible_index['x_varible']
             operation_code = OperationCode[ope]['pre_code'] + OperationCode[ope]['code']

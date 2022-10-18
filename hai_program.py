@@ -41,6 +41,7 @@ index_to_remove = list(male_funFreq_outlier_index) + list(female_funFreq_outlier
 len(index_to_remove)
 data_x = df[df.columns[0:20]].copy()
 data2 = data_x.drop(['kurt','centroid','dfrange'],axis=1).copy()
+data2.head(3)
 
 from sklearn.preprocessing import PolynomialFeatures
 import pandas as pd
@@ -53,22 +54,6 @@ train_data_x = add_engine.transform(data2)
 train_data_x = pd.DataFrame(train_data_x)
 data2 = train_data_x.loc[:, ~train_data_x.columns.duplicated()]
         
-
-from sklearn.feature_selection import VarianceThreshold
-import pandas as pd
-import numpy as np
-from itertools import compress
-        
-data2 = pd.DataFrame(data2).reset_index(drop=True).infer_objects()
-add_seletcion = VarianceThreshold()
-add_seletcion.fit(data2)
-
-cols = list(data2.columns)
-mask = add_seletcion.get_support(indices=False)
-final_cols = list(compress(cols, mask))
-data2 = pd.DataFrame(add_seletcion.transform(data2), columns=final_cols)
-        
-data2.head(3)
 data2 = data2.drop(index_to_remove,axis=0)
 data_y = pd.Series(y).drop(index_to_remove,axis=0)
 from sklearn.model_selection import train_test_split
@@ -139,6 +124,5 @@ model.fit(Xtrain, ytrain)
 y_pred = model.predict(Xtest)
 score = accuracy_score(ytest, y_pred)
 import numpy as np
-np.save("haipipe/core/tmpdata/merge_max_result_rl/datascientist25_gender-recognition-by-voice-using-machine-learning/29.npy", { "accuracy_score": score })
-
+np.save("haipipe/core/tmpdata/merge_max_result_rl/datascientist25_gender-recognition-by-voice-using-machine-learning/35.npy", { "accuracy_score": score })
 

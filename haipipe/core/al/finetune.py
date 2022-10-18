@@ -158,8 +158,13 @@ class Finetune:
         Select the best and evaluate.
         """
         score_dict = self.eval_all()
-        score_dict = sorted(score_dict.items(), key=lambda x: x[1], reverse=True)
-
+        temp_dict =[]
+        # score_dict = sorted(score_dict.items(), key=lambda x: x[1], reverse=True)
+        for v1 in set(sorted(score_dict.values(), reverse=True)):
+            for k, v2 in sorted(score_dict.items()):
+                if v1 == v2:
+                    temp_dict.append((k,v2))
+        score_dict = temp_dict
         res = []
 
         found = False
@@ -173,7 +178,6 @@ class Finetune:
 
             code_path = 'haipipe/core/tmpdata/rl_cross_validation_code_py/' +  self.notebook_id + '/' + seq_id + '.py'
             if not os.path.exists('haipipe/core/tmpdata/rl_cross_val_res/'+ self.notebook_id + '/' + seq_id + '.npy'):
-
                 runner = Runner()
                 dataset_path = config.dataset_path + info_triple[self.notebook_id]['dataset_name']
                 runner.run_one_case(code_path, dataset_path)
@@ -217,8 +221,8 @@ class Finetune:
         if len(self.pipeline_features) == 1:
             return {self.seq_ids[0]: 0}
         model.seq_lstm.dropout=0
+        # model.eval()
         out = model(torch.FloatTensor(self.dataset_features), torch.LongTensor(self.pipeline_features))
-
         score = {}
         for index, seq_id in enumerate(self.seq_ids):
             if seq_id not in self.run_fail:

@@ -23,7 +23,7 @@ def quick_start(notebook_path, dataset_path, label_index, model, hai_program_sav
     hai_pipe.evaluate_hi()
     hai_pipe.generate_aipipe()
     hai_pipe.combine()
-    hai_pipe.select_best_hai_by_al(K=20, T=5)
+    hai_pipe.select_best_hai_by_al()
     hai_pipe.output(hai_program_save_path,save_fig=True)
 
 if __name__ == "__main__":

@@ -149,7 +149,7 @@ class HAIPipe:
         print("\033[0;32;40msucceed\033[0m")
         print('\n')
 
-    def select_best_hai_by_al(self, K = 20, T = 5):
+    def select_best_hai_by_al(self, K = 20, T = 7):
         """
         HAI-pipeline selection by active learning
 
@@ -177,7 +177,6 @@ class HAIPipe:
         
         k = int(K / T) # training batch size for each iteration
         V = K - k*T # the number of HAI-pipelines to be selected in the last iteration
-
         ft = Finetune(self.notebook_id, k, T, V, model)
 
         ### active learning training
