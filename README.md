@@ -1,6 +1,6 @@
 # HAIPipe
 
-Given a human-generated pipeline (HI-pipeline) for an ML task, HAIPipe introduces a reinforcement learning based approach to search an optimized ML-generated pipeline (ML-pipeline) and adopts an enumeration-sampling strategy to carefully select the best performing combined pipeline.
+Given a human-generated pipeline (HI-pipeline) for an ML task, HAIPipe introduces a reinforcement learning based approach to search an optimized ML-generated pipeline (ML-pipeline) and adopts an enumeration-sampling strategy to carefully select the best performing combined pipeline(HAI-pipeline).
 
 ## Requirements
 
